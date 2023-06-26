@@ -1,6 +1,7 @@
-import 'package:dubts/Screens/home.dart';
+import 'package:airbnb_redesign_ui/map.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MaterialApp(
-      home: Home(),
-    ));
+void main() {
+  runApp(MapTracker(key: UniqueKey(),));
+}
+
