@@ -1,4 +1,4 @@
-import 'package:airbnb_redesign_ui/map.dart';
+import 'package:dubts/map.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
