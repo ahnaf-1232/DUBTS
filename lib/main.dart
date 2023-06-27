@@ -7,4 +7,3 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MapTracker(key: UniqueKey(),));
 }
-
