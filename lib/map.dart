@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class MapTracker extends StatefulWidget {
   const MapTracker({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class MapTracker extends StatefulWidget {
 
 class _MapTrackerState extends State<MapTracker> {
   LatLng? _currentLocation;
+  final databaseReference = FirebaseDatabase.instance;
 
   @override
   void initState() {
