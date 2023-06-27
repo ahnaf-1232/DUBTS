@@ -29,6 +29,8 @@ dependencies:
   latlong2: ^0.8.2
   geolocator: ^9.0.2
   permission_handler: ^10.3.0
+  firebase_database: ^10.2.3
+  firebase_core: ^2.14.0
 
 dev_dependencies:
   flutter_test:

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "411818987244",
-    "project_id": "notes-4c3a1",
-    "storage_bucket": "notes-4c3a1.appspot.com"
+    "project_number": "592598346363",
+    "project_id": "dubts-a851d",
+    "storage_bucket": "dubts-a851d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:411818987244:android:5d4ece2103502bdaf1dfc9",
+        "mobilesdk_app_id": "1:592598346363:android:e1dfb9aec0aef208a110de",
         "android_client_info": {
-          "package_name": "com.example.notes"
+          "package_name": "com.example.dubts"
         }
       },
       "oauth_client": [
         {
-          "client_id": "411818987244-6bio38cupfgmtp39r9iiuq4ser7j0k65.apps.googleusercontent.com",
+          "client_id": "592598346363-pjq7lpmsi5jdgiuv6ieii4ld5it53nje.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB-pRu2TJXPEqGpiahj1asg0GHPtV9e_70"
+          "current_key": "AIzaSyBg5orP2MMaHj0aKpck1ECyQ0p6NWp8usw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "411818987244-6bio38cupfgmtp39r9iiuq4ser7j0k65.apps.googleusercontent.com",
+              "client_id": "592598346363-pjq7lpmsi5jdgiuv6ieii4ld5it53nje.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
