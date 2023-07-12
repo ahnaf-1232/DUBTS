@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../services/auth.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -12,6 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
   late MapController _mapController;
   late DatabaseReference locationRef;
   List<Marker> markers = [];
@@ -65,6 +68,21 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+          backgroundColor: Colors.brown[400],
+          elevation: 0.0,
+          actions: <Widget>[
+            TextButton.icon(
+              icon: Icon(Icons.person_2_rounded),
+              label: Text('Sign In'),
+              onPressed: () async {
+                Navigator.pushNamed(context, '/sign_in');
+                // await FirebaseAuth.instance.signOut();
+              },
+            )
+          ],
+        ),
         body: FlutterMap(
           mapController: _mapController,
           options: MapOptions(

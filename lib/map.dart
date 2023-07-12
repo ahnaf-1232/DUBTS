@@ -1,3 +1,4 @@
+import 'package:dubts/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class MapTracker extends StatefulWidget {
 }
 
 class _MapTrackerState extends State<MapTracker> {
+  final AuthService _auth = AuthService();
   late MapController _mapController;
   Stream<LatLng>? _locationStream;
   FirebaseDatabase database = FirebaseDatabase.instance;
@@ -44,8 +46,8 @@ class _MapTrackerState extends State<MapTracker> {
         'lng': longitude,
       };
 
-      String busName = 'Khanika';
-      String busCode = '3410';
+      String busName = 'Baishakhi';
+      String busCode = '3610';
       DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
       locationRef.set(location);
     }
@@ -77,6 +79,23 @@ class _MapTrackerState extends State<MapTracker> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('Profile'),
+          backgroundColor: Colors.brown[400],
+          elevation: 0.0,
+          actions: <Widget>[
+            TextButton.icon(
+              icon: Icon(Icons.person_2_rounded),
+              label: Text('logout'),
+              onPressed: () async {
+                await _auth.logOut();
+                Navigator.pop(context);
+                Navigator.pop(context);
+                // await FirebaseAuth.instance.signOut();
+              },
+            )
+          ],
+        ),
         body: StreamBuilder<LatLng>(
           stream: _locationStream,
           builder: (context, snapshot) {
