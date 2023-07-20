@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dubts/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -23,6 +25,8 @@ class _MapTrackerState extends State<MapTracker> {
   final rtdb = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
   late DatabaseReference ref = rtdb.ref();
   late final center;
+  StreamSubscription<Position>? _locationSubscription;
+  late var timer;
 
 
   @override
@@ -30,6 +34,13 @@ class _MapTrackerState extends State<MapTracker> {
     super.initState();
     _mapController = MapController();
     _startLocationTracking();
+    new Timer.periodic(Duration(seconds: 60), (Timer t) {
+      if (!mounted) {
+        timer.cancel();
+      } else {
+        setState(() {});
+      }
+    });
   }
 
   Future<void> _startLocationTracking() async {
@@ -45,6 +56,7 @@ class _MapTrackerState extends State<MapTracker> {
         'lat': latitude,
         'lng': longitude,
       };
+      // print('UserInfo:' + _auth.user.toString());
 
       String busName = 'Baishakhi';
       String busCode = '3610';
@@ -52,13 +64,22 @@ class _MapTrackerState extends State<MapTracker> {
       locationRef.set(location);
     }
 
-    setState(() {
-      _locationStream = Geolocator.getPositionStream().map((position) {
-        pushToDatabase(position.latitude, position.longitude);
-        return LatLng(position.latitude, position.longitude);
-      });
+    _locationSubscription = Geolocator.getPositionStream().listen((position) {
+      pushToDatabase(position.latitude, position.longitude);
+      if(this.mounted) {
+          setState(() {
+            _locationStream = Stream.value(LatLng(position.latitude, position.longitude));
+          });
+      }
     });
   }
+
+  @override
+  void dispose() {
+    _locationSubscription?.cancel();
+    super.dispose();
+  }
+
 
   Future<LocationPermission> _getLocationPermission() async {
     if (await Permission.location.isGranted) {
@@ -77,7 +98,7 @@ class _MapTrackerState extends State<MapTracker> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return new MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('Profile'),
@@ -133,5 +154,12 @@ class _MapTrackerState extends State<MapTracker> {
         ),
       ),
     );
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (this.mounted) {
+      super.setState(fn);
+    }
   }
 }

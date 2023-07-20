@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,7 @@ class _HomeState extends State<Home> {
   late MapController _mapController;
   late DatabaseReference locationRef;
   List<Marker> markers = [];
+  StreamSubscription<DatabaseEvent>? _databsaeRefSubscription;
 
   @override
   void initState() {
@@ -30,11 +33,19 @@ class _HomeState extends State<Home> {
     await Firebase.initializeApp();
     final rtdb = FirebaseDatabase.instance;
     locationRef = rtdb.reference().child('location');
-    locationRef.onValue.listen((event) {
-      setState(() {
-        markers = _createMarkersFromData(event.snapshot.value as Map);
-      });
+    _databsaeRefSubscription = locationRef.onValue.listen((event) {
+      if(mounted) {
+        setState(() {
+          markers = _createMarkersFromData(event.snapshot.value as Map);
+        });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _databsaeRefSubscription?.cancel();
+    super.dispose();
   }
 
   List<Marker> _createMarkersFromData(Map? data) {
