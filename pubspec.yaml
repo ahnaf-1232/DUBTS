@@ -34,6 +34,8 @@ dependencies:
   provider: ^6.0.5
   flutter_spinkit: ^5.2.0
   cloud_firestore: ^4.8.2
+  carp_background_location: ^4.0.0
+  notification_permissions: ^0.6.1
 
 dev_dependencies:
   flutter_test:

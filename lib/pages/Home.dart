@@ -99,6 +99,7 @@ class _HomeState extends State<Home> {
           options: MapOptions(
             center: LatLng(23.6850, 90.3563),
             zoom: 7,
+            maxZoom: 18,
           ),
           children: [
             TileLayer(

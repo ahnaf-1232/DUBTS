@@ -5,10 +5,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:carp_background_location/carp_background_location.dart';
 
 class MapTracker extends StatefulWidget {
   const MapTracker({Key? key}) : super(key: key);
@@ -16,71 +17,53 @@ class MapTracker extends StatefulWidget {
   @override
   _MapTrackerState createState() => _MapTrackerState();
 }
+enum LocationStatus { UNKNOWN, INITIALIZED, RUNNING, STOPPED }
 
 class _MapTrackerState extends State<MapTracker> {
   final AuthService _auth = AuthService();
   late MapController _mapController;
-  Stream<LatLng>? _locationStream;
   FirebaseDatabase database = FirebaseDatabase.instance;
   final rtdb = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
   late DatabaseReference ref = rtdb.ref();
   late final center;
-  StreamSubscription<Position>? _locationSubscription;
   late var timer;
+
+  StreamSubscription<LocationDto>? locationSubscription;
+  LocationStatus _status = LocationStatus.UNKNOWN;
+  LocationDto? _lastLocation;
+  Stream<LatLng>? _locationStream;
 
 
   @override
   void initState() {
     super.initState();
+
+    LocationManager().interval = 1;
+    LocationManager().distanceFilter = 0;
+    LocationManager().notificationTitle = 'Dhaka University Bus Tracking System';
+    LocationManager().notificationMsg = 'Your location is being tracked.';
+
+    _status = LocationStatus.INITIALIZED;
+
     _mapController = MapController();
-    _startLocationTracking();
-    new Timer.periodic(Duration(seconds: 60), (Timer t) {
-      if (!mounted) {
-        timer.cancel();
-      } else {
-        setState(() {});
-      }
-    });
+
+    start();
   }
 
-  Future<void> _startLocationTracking() async {
-    final LocationPermission permission = await _getLocationPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      // Handle the case when the user denies location permission
-      return;
-    }
+  void pushToDatabase(double latitude, double longitude) {
+    Map<String, double> location = {
+      'lat': latitude,
+      'lng': longitude,
+    };
 
-    void pushToDatabase(double latitude, double longitude) {
-      Map<String, double> location = {
-        'lat': latitude,
-        'lng': longitude,
-      };
-      // print('UserInfo:' + _auth.user.toString());
-
-      String busName = 'Baishakhi';
-      String busCode = '3610';
-      DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
-      locationRef.set(location);
-    }
-
-    _locationSubscription = Geolocator.getPositionStream().listen((position) {
-      pushToDatabase(position.latitude, position.longitude);
-      if(this.mounted) {
-          setState(() {
-            _locationStream = Stream.value(LatLng(position.latitude, position.longitude));
-          });
-      }
-    });
+    String busName = 'Baishakhi';
+    String busCode = '3610';
+    DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
+    locationRef.set(location);
   }
 
-  @override
-  void dispose() {
-    _locationSubscription?.cancel();
-    super.dispose();
-  }
-
-
+  /// Tries to ask for "location always" permissions from the user.
+  /// Returns `true` if successful, `false` otherwise.
   Future<LocationPermission> _getLocationPermission() async {
     if (await Permission.location.isGranted) {
       return LocationPermission.always;
@@ -94,6 +77,59 @@ class _MapTrackerState extends State<MapTracker> {
       }
       return LocationPermission.denied;
     }
+  }
+
+  Future<bool> askForNotificationPermission() async {
+    bool granted = await Permission.notification.isGranted;
+
+    if (!granted) {
+      granted = await Permission.notification.request() == PermissionStatus.granted;
+    }
+
+    return granted;
+  }
+
+
+
+  void getCurrentLocation() async =>
+      onData(await LocationManager().getCurrentLocation());
+
+  void onData(LocationDto location) {
+    print('>> $location');
+    if(this.mounted) {
+      setState(() {
+        _lastLocation = location;
+        _locationStream = Stream.value(LatLng(_lastLocation!.latitude, _lastLocation!.longitude));
+      });
+      pushToDatabase(location.latitude, location.longitude);
+    }
+  }
+
+  void start() async {
+    final LocationPermission permission = await _getLocationPermission();
+    // ask for location permissions, if not already granted
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      // Handle the case when the user denies location permission
+      return;
+    }
+
+    // ask for notification permissions, if not already granted
+    // if (!await askForNotificationPermission())
+    //   return;
+
+    locationSubscription?.cancel();
+    locationSubscription = LocationManager().locationStream.listen(onData);
+    await LocationManager().start();
+    setState(() {
+      _status = LocationStatus.RUNNING;
+    });
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    locationSubscription!.cancel();
   }
 
   @override
@@ -125,6 +161,7 @@ class _MapTrackerState extends State<MapTracker> {
               options: MapOptions(
                 center: LatLng(23.6850, 90.3563),
                 zoom: 7,
+                maxZoom: 18,
               ),
               children: [
                 TileLayer(
