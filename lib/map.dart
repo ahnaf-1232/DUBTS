@@ -28,6 +28,9 @@ class _MapTrackerState extends State<MapTracker> {
   late final center;
   late var timer;
 
+  String busName = '';
+  String busCode = '';
+
   StreamSubscription<LocationDto>? locationSubscription;
   LocationStatus _status = LocationStatus.UNKNOWN;
   LocationDto? _lastLocation;
@@ -56,8 +59,8 @@ class _MapTrackerState extends State<MapTracker> {
       'lng': longitude,
     };
 
-    String busName = 'Baishakhi';
-    String busCode = '3610';
+    busName = 'Khanika';
+    busCode = '3410';
     DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
     locationRef.set(location);
   }
@@ -153,6 +156,7 @@ class _MapTrackerState extends State<MapTracker> {
             )
           ],
         ),
+        resizeToAvoidBottomInset: false,
         body: StreamBuilder<LatLng>(
           stream: _locationStream,
           builder: (context, snapshot) {
@@ -173,13 +177,29 @@ class _MapTrackerState extends State<MapTracker> {
                     if (snapshot.hasData)
                       Marker(
                         width: 40.0,
-                        height: 40.0,
+                        height: 55.0,
                         point: snapshot.data!,
                         builder: (ctx) => Container(
-                          child: Icon(
-                            Icons.location_pin,
-                            color: Colors.red,
-                            size: 40.0,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 6.0),
+                              Text(
+                                '$busName ($busCode)',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+
+                              Icon(
+                                Icons.location_pin,
+                                color: Colors.red,
+                                size: 30.0,
+                              ),
+                            ],
                           ),
                         ),
                       ),
