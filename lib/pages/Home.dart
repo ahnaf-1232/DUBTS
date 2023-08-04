@@ -57,13 +57,29 @@ class _HomeState extends State<Home> {
           final lat = innerValue['lat'];
           var marker = Marker(
             width: 40.0,
-            height: 40.0,
+            height: 55.0,
             point: LatLng(lat, lng),
             builder: (ctx) => Container(
-              child: Icon(
-                Icons.location_pin,
-                color: Colors.red,
-                size: 40.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 6.0),
+                  Text(
+                    '$key ($innerKey)',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+
+                  Icon(
+                    Icons.location_pin,
+                    color: Colors.red,
+                    size: 30.0,
+                  ),
+                ],
               ),
             ),
           );

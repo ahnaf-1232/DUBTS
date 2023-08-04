@@ -45,8 +45,8 @@ class _MapTrackerState extends State<MapTracker> {
       'lng': longitude,
     };
 
-    String busName = 'Baishakhi';
-    String busCode = '3610';
+    busName = 'Khanika';
+    busCode = '3410';
     DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
     locationRef.set(location);
   }
