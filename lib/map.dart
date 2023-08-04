@@ -24,6 +24,9 @@ class _MapTrackerState extends State<MapTracker> {
 
   late MapController _mapController;
 
+  String busName = '';
+  String busCode = '';
+
   double latitude = 23.6850;
   double longitude = 90.3563;
   String altitude = 'waiting...';
@@ -44,9 +47,9 @@ class _MapTrackerState extends State<MapTracker> {
       'lat': latitude,
       'lng': longitude,
     };
-
     busName = 'Khanika';
     busCode = '3410';
+
     DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
     locationRef.set(location);
   }
