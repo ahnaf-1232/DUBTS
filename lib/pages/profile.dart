@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dubts/map.dart';
+import 'package:dubts/shared/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Profile extends StatefulWidget {
@@ -94,10 +96,13 @@ class _ProfileState extends State<Profile> {
       // Move the print statement inside the build method or any other method.
       print('got ${widget.busName}, ${widget.busCode}');
 
-      return MapTracker(
-        busName: widget.busName,
-        busCode: widget.busCode,
-        deviceID: _deviceData['id'],
-      );
+      if(_deviceData['id'] != null) {
+        return MapTracker(
+          busName: widget.busName,
+          busCode: widget.busCode,
+          deviceID: _deviceData['id'],
+        );
+      }
+      else return Loading();
     }
 }

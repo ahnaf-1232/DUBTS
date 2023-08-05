@@ -29,9 +29,13 @@ class _BusSelectorState extends State<BusSelector> {
   Future<void> fetchBusData() async {
     Map<String, List<String>> busDetails = await DatabaseService.fetchBusData();
 
-    setState(() {
-      allBusDetails = busDetails;
-    });
+    if(mounted) {
+      setState(() {
+        allBusDetails = busDetails;
+      });
+    }
+    
+    print(busDetails);
 
     DatabaseService.printAllBusDetails(allBusDetails);
   }
@@ -125,5 +129,10 @@ class _BusSelectorState extends State<BusSelector> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

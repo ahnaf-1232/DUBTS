@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
         setState(() {
           markers = _createMarkersFromData(event.snapshot.value as Map);
         });
-      } else {
+      } else if (mounted) {
         setState(() {
           markers = [];
         });
@@ -70,35 +70,53 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
+  double _calculateMode(Map<double, int> occurrences) {
+    // print('entered');
+    double modeValue = 0.0;
+    int maxCount = 0;
+
+    occurrences.forEach((value, count) {
+      if (count > maxCount) {
+        modeValue = value;
+        maxCount = count;
+      }
+    });
+
+    return modeValue;
+  }
+
   List<Marker> _createMarkersFromData(Map? data) {
     List<Marker> newMarkers = [];
     if (data != null) {
       data.forEach((key, busName) {
         busName.forEach((busCode, deviceIDs) {
           print(deviceIDs);
-          double latitude = 0.0;
-          double longitude = 0.0;
-          int totalKeys = 0;
+          Map<double, int> latitudeOccurrences = {};
+          Map<double, int> longitudeOccurrences = {};
 
           deviceIDs.forEach((deviceID, location) {
             if (location is Map &&
                 location.containsKey('lat') &&
                 location.containsKey('lng')) {
-              latitude += location['lat'];
-              longitude += location['lng'];
-              totalKeys++;
+              double latitude = location['lat'];
+              double longitude = location['lng'];
+
+              latitudeOccurrences[latitude] =
+                  (latitudeOccurrences[latitude] ?? 0) + 1;
+              longitudeOccurrences[longitude] =
+                  (longitudeOccurrences[longitude] ?? 0) + 1;
             }
           });
 
-          print('$latitude, $longitude, $totalKeys');
+          double modeLatitude = _calculateMode(latitudeOccurrences);
+          double modeLongitude = _calculateMode(longitudeOccurrences);
 
-          latitude = latitude / totalKeys;
-          longitude = longitude / totalKeys;
+          print('$modeLatitude, $modeLongitude');
 
           var marker = Marker(
             width: 40.0,
             height: 55.0,
-            point: LatLng(latitude, longitude),
+            point: LatLng(modeLatitude, modeLongitude),
             builder: (ctx) => Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
