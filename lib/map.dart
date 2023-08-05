@@ -17,13 +17,16 @@ class MapTracker extends StatefulWidget {
   @override
   _MapTrackerState createState() => _MapTrackerState();
 }
+
 enum LocationStatus { UNKNOWN, INITIALIZED, RUNNING, STOPPED }
 
 class _MapTrackerState extends State<MapTracker> {
   final AuthService _auth = AuthService();
   late MapController _mapController;
   FirebaseDatabase database = FirebaseDatabase.instance;
-  final rtdb = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
+  final rtdb = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
   late DatabaseReference ref = rtdb.ref();
   late final center;
   late var timer;
@@ -36,14 +39,14 @@ class _MapTrackerState extends State<MapTracker> {
   LocationDto? _lastLocation;
   Stream<LatLng>? _locationStream;
 
-
   @override
   void initState() {
     super.initState();
 
     LocationManager().interval = 1;
     LocationManager().distanceFilter = 0;
-    LocationManager().notificationTitle = 'Dhaka University Bus Tracking System';
+    LocationManager().notificationTitle =
+        'Dhaka University Bus Tracking System';
     LocationManager().notificationMsg = 'Your location is being tracked.';
 
     _status = LocationStatus.INITIALIZED;
@@ -61,7 +64,8 @@ class _MapTrackerState extends State<MapTracker> {
 
     busName = 'Khanika';
     busCode = '3410';
-    DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
+    DatabaseReference locationRef =
+        ref.child('location').child(busName).child(busCode);
     locationRef.set(location);
   }
 
@@ -73,7 +77,8 @@ class _MapTrackerState extends State<MapTracker> {
     } else {
       final PermissionStatus status = await Permission.location.request();
       if (status.isGranted) {
-        final PermissionStatus backgroundStatus = await Permission.locationWhenInUse.request();
+        final PermissionStatus backgroundStatus =
+            await Permission.locationWhenInUse.request();
         if (backgroundStatus.isGranted) {
           return LocationPermission.always;
         }
@@ -86,23 +91,23 @@ class _MapTrackerState extends State<MapTracker> {
     bool granted = await Permission.notification.isGranted;
 
     if (!granted) {
-      granted = await Permission.notification.request() == PermissionStatus.granted;
+      granted =
+          await Permission.notification.request() == PermissionStatus.granted;
     }
 
     return granted;
   }
-
-
 
   void getCurrentLocation() async =>
       onData(await LocationManager().getCurrentLocation());
 
   void onData(LocationDto location) {
     print('>> $location');
-    if(this.mounted) {
+    if (this.mounted) {
       setState(() {
         _lastLocation = location;
-        _locationStream = Stream.value(LatLng(_lastLocation!.latitude, _lastLocation!.longitude));
+        _locationStream = Stream.value(
+            LatLng(_lastLocation!.latitude, _lastLocation!.longitude));
       });
       pushToDatabase(location.latitude, location.longitude);
     }
@@ -130,7 +135,7 @@ class _MapTrackerState extends State<MapTracker> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     locationSubscription!.cancel();
   }
@@ -190,10 +195,8 @@ class _MapTrackerState extends State<MapTracker> {
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 10.0,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                    fontWeight: FontWeight.bold),
                               ),
-
                               Icon(
                                 Icons.location_pin,
                                 color: Colors.red,

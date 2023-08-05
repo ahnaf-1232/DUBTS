@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../services/auth.dart';
+import '../shared/loading.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,6 +21,10 @@ class _HomeState extends State<Home> {
   late MapController _mapController;
   late DatabaseReference locationRef;
   List<Marker> markers = [];
+
+  final _formKey = GlobalKey<FormState>();
+  bool loading = false;
+
   StreamSubscription<DatabaseEvent>? _databsaeRefSubscription;
 
   @override
@@ -34,7 +39,7 @@ class _HomeState extends State<Home> {
     final rtdb = FirebaseDatabase.instance;
     locationRef = rtdb.reference().child('location');
     _databsaeRefSubscription = locationRef.onValue.listen((event) {
-      if(mounted) {
+      if (mounted) {
         setState(() {
           markers = _createMarkersFromData(event.snapshot.value as Map);
         });
@@ -70,10 +75,8 @@ class _HomeState extends State<Home> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 10.0,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                   ),
-
                   Icon(
                     Icons.location_pin,
                     color: Colors.red,
@@ -93,41 +96,48 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Home'),
-          backgroundColor: Colors.brown[400],
-          elevation: 0.0,
-          actions: <Widget>[
-            TextButton.icon(
-              icon: Icon(Icons.person_2_rounded),
-              label: Text('Sign In'),
-              onPressed: () async {
-                Navigator.pushNamed(context, '/sign_in');
-                // await FirebaseAuth.instance.signOut();
-              },
-            )
-          ],
-        ),
-        body: FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            center: LatLng(23.6850, 90.3563),
-            zoom: 7,
-            maxZoom: 18,
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
+    return loading
+        ? Loading()
+        : MaterialApp(
+            home: Scaffold(
+              appBar: AppBar(
+                title: Text('Home'),
+                backgroundColor: Colors.brown[400],
+                elevation: 0.0,
+                actions: <Widget>[
+                  ElevatedButton(
+                    child: Text('Be a guide!'),
+                    onPressed: () async {
+                      dynamic result = await _auth.signInAnon();
+                      if(result == null){
+                        print('error signing in');
+                      } else {
+                        print('signed in');
+                        print(result);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              body: FlutterMap(
+                mapController: _mapController,
+                options: MapOptions(
+                  center: LatLng(23.6850, 90.3563),
+                  zoom: 7,
+                  maxZoom: 18,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.app',
+                  ),
+                  MarkerLayer(
+                    markers: markers,
+                  ),
+                ],
+              ),
             ),
-            MarkerLayer(
-              markers: markers,
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
