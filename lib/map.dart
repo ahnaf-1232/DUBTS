@@ -24,8 +24,8 @@ class _MapTrackerState extends State<MapTracker> {
 
   late MapController _mapController;
 
-  String busName = '';
-  String busCode = '';
+  String busName = 'Kinchit';
+  String busCode = '3510';
 
   double latitude = 23.6850;
   double longitude = 90.3563;
@@ -47,8 +47,6 @@ class _MapTrackerState extends State<MapTracker> {
       'lat': latitude,
       'lng': longitude,
     };
-    busName = 'Khanika';
-    busCode = '3410';
 
     DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
     locationRef.set(location);
@@ -78,6 +76,7 @@ class _MapTrackerState extends State<MapTracker> {
 
   void getLocation () {
     BackgroundLocation.getLocationUpdates((location) {
+      print(location);
       setState(() {
         latitude = location.latitude!;
         longitude = location.longitude!;
@@ -88,6 +87,8 @@ class _MapTrackerState extends State<MapTracker> {
         time = DateTime.fromMillisecondsSinceEpoch(location.time!.toInt())
             .toString();
       });
+      print('Started Tracking');
+
 
       printLocationData();
 
