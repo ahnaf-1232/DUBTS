@@ -127,6 +127,7 @@ class _MapTrackerState extends State<MapTracker> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         deleteLocationData();
@@ -165,16 +166,42 @@ class _MapTrackerState extends State<MapTracker> {
                 ),
                 MarkerLayer(
                   markers: [
-                    Marker(
-                      width: 40.0,
-                      height: 40.0,
-                      point: LatLng(latitude, longitude),
-                      builder: (ctx) => const Icon(
-                        Icons.location_pin,
-                        color: Colors.red,
-                        size: 40.0,
-                      ),
+                  Marker(
+                  width: 40.0,
+                  height: 55.0,
+                  point: LatLng(latitude, longitude),
+                  builder: (ctx) => Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 6.0),
+                        Text(
+                          '${widget.busName} (${widget.busCode})',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 10.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Icon(
+                          Icons.location_pin,
+                          color: Colors.red,
+                          size: 30.0,
+                        ),
+                      ],
                     ),
+                  ),
+                ),
+                    // Marker(
+                    //   width: 40.0,
+                    //   height: 40.0,
+                    //   point: LatLng(latitude, longitude),
+                    //   builder: (ctx) => const Icon(
+                    //     Icons.location_pin,
+                    //     color: Colors.red,
+                    //     size: 40.0,
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
