@@ -90,9 +90,9 @@ class _MapTrackerState extends State<MapTracker> {
 
   void setNotification() async {
     await BackgroundLocation.setAndroidNotification(
-      title: 'Background service is running',
+      title: 'Du Bus Tracker',
       message:
-          'Background location in progress. latitude: ${latitude}, longitude: ${longitude}',
+          'Tracking location. latitude: ${latitude}, longitude: ${longitude}',
       icon: '@mipmap/ic_launcher',
     );
   }
