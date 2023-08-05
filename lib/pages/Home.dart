@@ -31,15 +31,23 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _mapController = MapController();
+    _showLoadingScreen();
+  }
+
+  Future<void> _showLoadingScreen() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      loading = false;
+    });
     _initializeFirebase();
   }
 
   Future<void> _initializeFirebase() async {
     await Firebase.initializeApp();
     final rtdb = FirebaseDatabase.instance;
-    locationRef = rtdb.reference().child('location');
+    locationRef = rtdb.ref().child('location');
     _databsaeRefSubscription = locationRef.onValue.listen((event) {
-      if (mounted) {
+      if (mounted && event.snapshot.value != null) {
         setState(() {
           markers = _createMarkersFromData(event.snapshot.value as Map);
         });
