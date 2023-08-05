@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dubts/pages/profile.dart';
 import 'package:flutter/material.dart';
-
 import '../models/bus.dart';
 import '../services/databases.dart';
 
@@ -18,7 +16,6 @@ class _BusSelectorState extends State<BusSelector> {
   List<Bus> buses = [];
 
   Map<String, List<String>> allBusDetails = {};
-
 
   @override
   void initState() {
