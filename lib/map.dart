@@ -19,7 +19,9 @@ class _MapTrackerState extends State<MapTracker> {
   final AuthService _auth = AuthService();
 
   FirebaseDatabase database = FirebaseDatabase.instance;
-  final rtdb = FirebaseDatabase.instanceFor(app: Firebase.app(), databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
+  final rtdb = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
   late DatabaseReference ref = rtdb.ref();
 
   late MapController _mapController;

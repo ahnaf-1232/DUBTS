@@ -72,7 +72,6 @@ class AuthService {
       return await FirebaseAuth.instance.signOut();
     } catch (error) {
       if (kDebugMode) {
-        print('ken hoitese egulaaaaaaaaaaaaaaaaaaaaaaaaa');
         print(error.toString());
       }
       return null;
