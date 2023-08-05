@@ -56,14 +56,30 @@ class _HomeState extends State<Home> {
   List<Marker> _createMarkersFromData(Map? data) {
     List<Marker> newMarkers = [];
     if (data != null) {
-      data.forEach((key, value) {
-        value.forEach((innerKey, innerValue) {
-          final lng = innerValue['lng'];
-          final lat = innerValue['lat'];
+      data.forEach((key, busName) {
+        busName.forEach((busCode, deviceIDs) {
+          print(deviceIDs);
+          double latitude = 0.0;
+          double longitude = 0.0;
+          int totalKeys = 0;
+
+          deviceIDs.forEach((deviceID, location) {
+            if (location is Map && location.containsKey('lat') && location.containsKey('lng')) {
+              latitude += location['lat'];
+              longitude += location['lng'];
+              totalKeys++;
+            }
+          });
+
+          print('$latitude, $longitude, $totalKeys');
+
+          latitude = latitude / totalKeys;
+          longitude = longitude / totalKeys;
+
           var marker = Marker(
             width: 40.0,
             height: 55.0,
-            point: LatLng(lat, lng),
+            point: LatLng(latitude, longitude),
             builder: (ctx) => Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +87,7 @@ class _HomeState extends State<Home> {
                 children: [
                   SizedBox(height: 6.0),
                   Text(
-                    '$key ($innerKey)',
+                    '$key ($busCode)',
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 10.0,

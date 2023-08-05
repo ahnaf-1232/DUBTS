@@ -11,8 +11,9 @@ import 'package:latlong2/latlong.dart';
 class MapTracker extends StatefulWidget {
   final String busName;
   final String busCode;
+  final String deviceID;
 
-  const MapTracker({required this.busName, required this.busCode});
+  const MapTracker({required this.busName, required this.busCode, required this.deviceID});
 
   @override
   _MapTrackerState createState() => _MapTrackerState();
@@ -50,7 +51,11 @@ class _MapTrackerState extends State<MapTracker> {
       'lng': longitude,
     };
 
-    DatabaseReference locationRef = ref.child('location').child(widget.busName).child(widget.busCode);
+    String id = widget.deviceID.replaceAll('.', '');
+
+    print('device ID: ${widget.deviceID}');
+
+    DatabaseReference locationRef = ref.child('location').child(widget.busName).child(widget.busCode).child(id);
     locationRef.set(location);
   }
 
