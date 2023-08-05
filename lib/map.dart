@@ -46,7 +46,7 @@ class _MapTrackerState extends State<MapTracker> {
     _mapController = MapController();
   }
 
-  void pushToDatabase(double latitude, double longitude) {
+  void updateLocationData(double latitude, double longitude) {
     Map<String, double> location = {
       'lat': latitude,
       'lng': longitude,
@@ -65,7 +65,6 @@ class _MapTrackerState extends State<MapTracker> {
   }
 
   void deleteLocationData() {
-    print('-----------------------------------------------------------------------------------------------I entered here');
     String id = widget.deviceID.replaceAll('.', '');
     DatabaseReference locationRef = ref
         .child('location')
@@ -117,7 +116,7 @@ class _MapTrackerState extends State<MapTracker> {
 
       setNotification();
 
-      pushToDatabase(latitude, longitude);
+      updateLocationData(latitude, longitude);
     });
   }
 
