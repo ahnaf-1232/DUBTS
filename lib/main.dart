@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => Wrapper(),
           '/sign_in': (context) => Authenticate(),
-          '/profile': (context) => Profile(),
+          // '/profile': (context) => Profile(busName: '', busCode: ''),
         },
       ),
     );

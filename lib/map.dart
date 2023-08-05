@@ -9,7 +9,10 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapTracker extends StatefulWidget {
-  const MapTracker({Key? key}) : super(key: key);
+  final String busName;
+  final String busCode;
+
+  const MapTracker({required this.busName, required this.busCode});
 
   @override
   _MapTrackerState createState() => _MapTrackerState();
@@ -25,9 +28,6 @@ class _MapTrackerState extends State<MapTracker> {
   late DatabaseReference ref = rtdb.ref();
 
   late MapController _mapController;
-
-  String busName = 'Kinchit';
-  String busCode = '3510';
 
   double latitude = 23.6850;
   double longitude = 90.3563;
@@ -50,7 +50,7 @@ class _MapTrackerState extends State<MapTracker> {
       'lng': longitude,
     };
 
-    DatabaseReference locationRef = ref.child('location').child(busName).child(busCode);
+    DatabaseReference locationRef = ref.child('location').child(widget.busName).child(widget.busCode);
     locationRef.set(location);
   }
 
@@ -120,7 +120,7 @@ class _MapTrackerState extends State<MapTracker> {
                 onPressed: () async {
                   await _auth.logOut();
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
                   // await FirebaseAuth.instance.signOut();
                 },
               )

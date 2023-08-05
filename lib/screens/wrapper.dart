@@ -1,5 +1,6 @@
 import 'package:dubts/models/user.dart';
 import 'package:dubts/pages/Home.dart';
+import 'package:dubts/pages/bus_selector.dart';
 // import 'package:dubts/pages/Home.dart';
 import 'package:dubts/pages/profile.dart';
 import 'package:dubts/screens/authenticate/authenticate.dart';
@@ -19,7 +20,7 @@ class Wrapper extends StatelessWidget {
       return const Home();
     }
     else {
-      return Profile();
+      return BusSelector();
     }
 
   }
