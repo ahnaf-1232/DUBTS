@@ -51,6 +51,10 @@ class _HomeState extends State<Home> {
         setState(() {
           markers = _createMarkersFromData(event.snapshot.value as Map);
         });
+      } else {
+        setState(() {
+          markers = [];
+        });
       }
     });
   }
@@ -72,7 +76,9 @@ class _HomeState extends State<Home> {
           int totalKeys = 0;
 
           deviceIDs.forEach((deviceID, location) {
-            if (location is Map && location.containsKey('lat') && location.containsKey('lng')) {
+            if (location is Map &&
+                location.containsKey('lat') &&
+                location.containsKey('lng')) {
               latitude += location['lat'];
               longitude += location['lng'];
               totalKeys++;
@@ -133,7 +139,7 @@ class _HomeState extends State<Home> {
                     child: Text('Be a guide!'),
                     onPressed: () async {
                       dynamic result = await _auth.signInAnon();
-                      if(result == null){
+                      if (result == null) {
                         print('error signing in');
                       } else {
                         print('signed in');
