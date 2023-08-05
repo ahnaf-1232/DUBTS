@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dubts/pages/profile.dart';
 import 'package:flutter/material.dart';
+
+import '../models/bus.dart';
+import '../services/databases.dart';
 
 class BusSelector extends StatefulWidget {
   const BusSelector({super.key});
@@ -11,12 +15,26 @@ class BusSelector extends StatefulWidget {
 class _BusSelectorState extends State<BusSelector> {
   String selectedBusName = 'Baishakhi';
   String selectedBusCode = '3401';
+  List<Bus> buses = [];
 
-  Map<String, List<String>> allBusDetails = {
-    'Baishakhi': ['3401', '3402', '3403'],
-    'Khanika': ['3501', '3502', '3503'],
-    'Kinchit': ['3601', '3602', '3603'],
-  };
+  Map<String, List<String>> allBusDetails = {};
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBusData();
+  }
+
+  Future<void> fetchBusData() async {
+    Map<String, List<String>> busDetails = await DatabaseService.fetchBusData();
+
+    setState(() {
+      allBusDetails = busDetails;
+    });
+
+    DatabaseService.printAllBusDetails(allBusDetails);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,19 +52,18 @@ class _BusSelectorState extends State<BusSelector> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Select Bus Name: '),
-                  SizedBox(width: 30,),
+                  SizedBox(
+                    width: 30,
+                  ),
                   DropdownButton(
                     value: selectedBusName,
-
                     items: allBusDetails.keys.map((key) {
                       return DropdownMenuItem<String>(
                         value: key,
                         child: Text(key),
                       );
                     }).toList(),
-
                     icon: const Icon(Icons.keyboard_arrow_down),
-
                     onChanged: (String? selectedValue) {
                       setState(() {
                         selectedBusName = selectedValue!;
@@ -56,24 +73,25 @@ class _BusSelectorState extends State<BusSelector> {
                   ),
                 ],
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Select Bus Code: '),
-                  SizedBox(width: 30,),
+                  SizedBox(
+                    width: 30,
+                  ),
                   DropdownButton(
                     value: selectedBusCode,
-
                     items: allBusDetails[selectedBusName]?.map((String items) {
                       return DropdownMenuItem(
                         value: items,
                         child: Text(items),
                       );
                     }).toList(),
-
                     icon: const Icon(Icons.keyboard_arrow_down),
-
                     onChanged: (String? selectedValue) {
                       setState(() {
                         selectedBusCode = selectedValue!;
@@ -82,7 +100,9 @@ class _BusSelectorState extends State<BusSelector> {
                   ),
                 ],
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -90,11 +110,14 @@ class _BusSelectorState extends State<BusSelector> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Profile(busName: selectedBusName, busCode: selectedBusCode,)),
+                          MaterialPageRoute(
+                              builder: (context) => Profile(
+                                    busName: selectedBusName,
+                                    busCode: selectedBusCode,
+                                  )),
                         );
                       },
-                      child: Icon(Icons.navigate_next)
-                  ),
+                      child: Icon(Icons.navigate_next)),
                 ],
               ),
             ],
