@@ -26,7 +26,7 @@ class _BusSelectorState extends State<BusSelector> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

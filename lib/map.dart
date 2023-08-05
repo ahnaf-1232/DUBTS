@@ -13,7 +13,8 @@ class MapTracker extends StatefulWidget {
   final String busCode;
   final String deviceID;
 
-  const MapTracker({required this.busName, required this.busCode, required this.deviceID});
+  const MapTracker(
+      {required this.busName, required this.busCode, required this.deviceID});
 
   @override
   _MapTrackerState createState() => _MapTrackerState();
@@ -55,11 +56,26 @@ class _MapTrackerState extends State<MapTracker> {
 
     print('device ID: ${widget.deviceID}');
 
-    DatabaseReference locationRef = ref.child('location').child(widget.busName).child(widget.busCode).child(id);
+    DatabaseReference locationRef = ref
+        .child('location')
+        .child(widget.busName)
+        .child(widget.busCode)
+        .child(id);
     locationRef.set(location);
   }
 
-  void printLocationData () {
+  void deleteLocationData() {
+    print('-----------------------------------------------------------------------------------------------I entered here');
+    String id = widget.deviceID.replaceAll('.', '');
+    DatabaseReference locationRef = ref
+        .child('location')
+        .child(widget.busName)
+        .child(widget.busCode)
+        .child(id);
+    locationRef.remove();
+  }
+
+  void printLocationData() {
     if (kDebugMode) {
       print('''\n
                         Latitude:  $latitude
@@ -73,15 +89,16 @@ class _MapTrackerState extends State<MapTracker> {
     }
   }
 
-  void setNotification () async {
+  void setNotification() async {
     await BackgroundLocation.setAndroidNotification(
       title: 'Background service is running',
-      message: 'Background location in progress. latitude: ${latitude}, longitude: ${longitude}',
+      message:
+          'Background location in progress. latitude: ${latitude}, longitude: ${longitude}',
       icon: '@mipmap/ic_launcher',
     );
   }
 
-  void getLocation () {
+  void getLocation() {
     BackgroundLocation.getLocationUpdates((location) {
       print(location);
       setState(() {
@@ -96,11 +113,10 @@ class _MapTrackerState extends State<MapTracker> {
       });
       print('Started Tracking');
 
-
       printLocationData();
 
       setNotification();
-      
+
       pushToDatabase(latitude, longitude);
     });
   }
@@ -112,53 +128,58 @@ class _MapTrackerState extends State<MapTracker> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Profile'),
-            backgroundColor: Colors.brown[400],
-            elevation: 0.0,
-            actions: <Widget>[
-              TextButton.icon(
-                icon: const Icon(Icons.person_2_rounded),
-                label: const Text('logout'),
-                onPressed: () async {
-                  await _auth.logOut();
-                  Navigator.pop(context);
-                  // Navigator.pop(context);
-                  // await FirebaseAuth.instance.signOut();
-                },
-              )
-            ],
-          ),
-          body: FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              center: LatLng(latitude, longitude),
-              zoom: 7,
-              maxZoom: 18,
+    return WillPopScope(
+      onWillPop: () async {
+        deleteLocationData();
+        return true;
+      },
+      child: MaterialApp(
+        home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Profile'),
+              backgroundColor: Colors.brown[400],
+              elevation: 0.0,
+              actions: <Widget>[
+                TextButton.icon(
+                  icon: const Icon(Icons.person_2_rounded),
+                  label: const Text('logout'),
+                  onPressed: () async {
+                    await _auth.logOut();
+                    Navigator.of(context).pop();
+                    // Navigator.pop(context);
+                    // await FirebaseAuth.instance.signOut();
+                  },
+                )
+              ],
             ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.app',
+            body: FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                center: LatLng(latitude, longitude),
+                zoom: 7,
+                maxZoom: 18,
               ),
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    width: 40.0,
-                    height: 40.0,
-                    point: LatLng(latitude, longitude),
-                    builder: (ctx) => const Icon(
-                      Icons.location_pin,
-                      color: Colors.red,
-                      size: 40.0,
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      width: 40.0,
+                      height: 40.0,
+                      point: LatLng(latitude, longitude),
+                      builder: (ctx) => const Icon(
+                        Icons.location_pin,
+                        color: Colors.red,
+                        size: 40.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          )
+                  ],
+                ),
+              ],
+            )),
       ),
     );
   }
@@ -166,6 +187,7 @@ class _MapTrackerState extends State<MapTracker> {
   @override
   void dispose() {
     BackgroundLocation.stopLocationService();
+    deleteLocationData();
     super.dispose();
   }
 }
