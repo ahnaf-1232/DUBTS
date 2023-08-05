@@ -36,6 +36,7 @@ dependencies:
   cloud_firestore: ^4.8.2
   carp_background_location: ^4.0.0
   notification_permissions: ^0.6.1
+  background_location: ^0.11.8
 
 dev_dependencies:
   flutter_test:
