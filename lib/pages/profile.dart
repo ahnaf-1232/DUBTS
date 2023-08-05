@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dubts/map.dart';
 import 'package:dubts/shared/loading.dart';
