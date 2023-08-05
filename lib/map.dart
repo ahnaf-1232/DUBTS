@@ -175,18 +175,33 @@ class _MapTrackerState extends State<MapTracker> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 6.0),
-                        Text(
-                          '${widget.busName} (${widget.busCode})',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 10.0,
-                              fontWeight: FontWeight.bold),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${widget.busName}',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '(${widget.busCode})',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         Icon(
                           Icons.location_pin,
                           color: Colors.red,
-                          size: 30.0,
+                          size: 25.0,
                         ),
                       ],
                     ),

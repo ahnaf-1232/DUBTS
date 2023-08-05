@@ -35,10 +35,15 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _showLoadingScreen() async {
-    await Future.delayed(const Duration(seconds: 2));
     setState(() {
-      loading = false;
+      loading = true;
     });
+    await Future.delayed(const Duration(seconds: 2));
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
     _initializeFirebase();
   }
 
@@ -100,17 +105,33 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 6.0),
-                  Text(
-                    '$key ($busCode)',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.bold),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        children: [
+                          Text(
+                            '$key',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '($busCode)',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   Icon(
                     Icons.location_pin,
                     color: Colors.red,
-                    size: 30.0,
+                    size: 25.0,
                   ),
                 ],
               ),
