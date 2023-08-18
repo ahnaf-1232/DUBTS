@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/bus.dart';
-
 class DatabaseService{
   static Future<Map<String, List<String>>> fetchBusData() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;

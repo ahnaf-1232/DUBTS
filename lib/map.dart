@@ -1,4 +1,5 @@
 import 'package:background_location/background_location.dart';
+import 'package:dubts/pages/schedule.dart';
 import 'package:dubts/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -127,7 +128,6 @@ class _MapTrackerState extends State<MapTracker> {
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: () async {
         deleteLocationData();
@@ -137,21 +137,33 @@ class _MapTrackerState extends State<MapTracker> {
         home: Scaffold(
             appBar: AppBar(
               title: const Text('Profile'),
-              backgroundColor: Colors.brown[400],
+              backgroundColor: Theme.of(context).colorScheme.primary,
               elevation: 0.0,
               actions: <Widget>[
                 TextButton.icon(
-                  icon: const Icon(Icons.person_2_rounded),
-                  label: const Text('logout'),
+                  icon: const Icon(
+                      Icons.schedule,
+                    color: Colors.black,),
+                  label: const Text('Schedule', style: TextStyle(color: Colors.black),),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SchedulePage()), // Replace SchedulePage with the actual name of your schedule page widget
+                    );
+                  },
+                ),
+
+                TextButton.icon(
+                  icon: const Icon(Icons.person_2_rounded,  color: Colors.black,),
+                  label: const Text('Logout',  style: TextStyle(color: Colors.black),),
                   onPressed: () async {
                     await _auth.logOut();
                     Navigator.of(context).pop();
-                    // Navigator.pop(context);
-                    // await FirebaseAuth.instance.signOut();
                   },
-                )
+                ),
               ],
             ),
+
             body: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
@@ -166,57 +178,47 @@ class _MapTrackerState extends State<MapTracker> {
                 ),
                 MarkerLayer(
                   markers: [
-                  Marker(
-                  width: 40.0,
-                  height: 55.0,
-                  point: LatLng(latitude, longitude),
-                  builder: (ctx) => Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${widget.busName}',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold),
+                    Marker(
+                      width: 40.0,
+                      height: 55.0,
+                      point: LatLng(latitude, longitude),
+                      builder: (ctx) => Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '${widget.busName}',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      '(${widget.busCode})',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  '(${widget.busCode})',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.red,
+                              size: 25.0,
+                            ),
+                          ],
                         ),
-                        Icon(
-                          Icons.location_pin,
-                          color: Colors.red,
-                          size: 25.0,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                    // Marker(
-                    //   width: 40.0,
-                    //   height: 40.0,
-                    //   point: LatLng(latitude, longitude),
-                    //   builder: (ctx) => const Icon(
-                    //     Icons.location_pin,
-                    //     color: Colors.red,
-                    //     size: 40.0,
-                    //   ),
-                    // ),
                   ],
                 ),
               ],

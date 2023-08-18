@@ -42,6 +42,8 @@ class _BusSelectorState extends State<BusSelector> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bus Selector'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 0.0,
       ),
       body: Center(
         child: Padding(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dubts/pages/schedule.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -171,11 +172,27 @@ class _HomeState extends State<Home> {
             home: Scaffold(
               appBar: AppBar(
                 title: Text('Home'),
-                backgroundColor: Colors.brown[400],
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 elevation: 0.0,
                 actions: <Widget>[
-                  ElevatedButton(
-                    child: Text('Be a guide!'),
+                  TextButton.icon(
+                    icon: const Icon(
+                      Icons.schedule,
+                      color: Colors.black,),
+                    label: const Text('Schedule', style: TextStyle(color: Colors.black),),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SchedulePage()), // Replace SchedulePage with the actual name of your schedule page widget
+                      );
+                    },
+                  ),
+                  TextButton.icon(
+                    icon: const Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                    label: const Text( 'Be a guide!', style: TextStyle(color: Colors.black),),
                     onPressed: () async {
                       dynamic result = await _auth.signInAnon();
                       if (result == null) {
@@ -186,8 +203,11 @@ class _HomeState extends State<Home> {
                       }
                     },
                   ),
+
                 ],
               ),
+
+
               body: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
