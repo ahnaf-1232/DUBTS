@@ -1,6 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:dubts/pages/schedule.dart';
 import 'package:dubts/services/auth.dart';
+import 'package:dubts/shared/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -33,8 +34,9 @@ class _MapTrackerState extends State<MapTracker> {
 
   late MapController _mapController;
 
-  double latitude = 23.6850;
-  double longitude = 90.3563;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  bool isLocationAvailable = false;
   String altitude = 'waiting...';
   String accuracy = 'waiting...';
   String bearing = 'waiting...';
@@ -116,6 +118,9 @@ class _MapTrackerState extends State<MapTracker> {
     BackgroundLocation.getLocationUpdates((location) async {
       print(location);
       setState(() {
+        if(!isLocationAvailable) {
+          isLocationAvailable = true;
+        }
         latitude = location.latitude!;
         longitude = location.longitude!;
         accuracy = location.accuracy.toString();
@@ -222,12 +227,14 @@ class _MapTrackerState extends State<MapTracker> {
                 ),
               ],
             ),
-            body: FlutterMap(
+            body: isLocationAvailable?
+            FlutterMap(
               mapController: _mapController,
               options: MapOptions(
                 center: LatLng(latitude, longitude),
-                zoom: 10,
+                zoom: 16,
                 maxZoom: 18,
+                minZoom: 2.6,
               ),
               children: [
                 TileLayer(
@@ -253,7 +260,7 @@ class _MapTrackerState extends State<MapTracker> {
                                   padding: EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.green.shade900,
+                                    color: Colors.red.shade900,
                                   ),
                                   child: Column(
                                     children: [
@@ -288,7 +295,9 @@ class _MapTrackerState extends State<MapTracker> {
                   ],
                 ),
               ],
-            )),
+            ) :
+            Center(child: Loading()),
+        ),
       ),
     );
   }

@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
   late DatabaseReference locationRef;
   List<Marker> markers = [];
 
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
   StreamSubscription<DatabaseEvent>? _databsaeRefSubscription;
@@ -252,9 +252,10 @@ class _HomeState extends State<Home> {
               body: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  center: LatLng(23.6850, 90.3563),
-                  zoom: 7,
+                  center: LatLng(23.7350, 90.3908),
+                  zoom: 10.6,
                   maxZoom: 18,
+                  minZoom: 2.6,
                 ),
                 children: [
                   TileLayer(
