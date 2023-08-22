@@ -13,9 +13,16 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bus Schedule'),
+        title: Text('Bus Schedule', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25,),),
         backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: Colors.white, // Change the color of the back button here
+        ),
       ),
       // body: ScheduleList(), // Custom widget to display the list of schedules
     );

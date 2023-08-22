@@ -11,10 +11,6 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<CustomUser?>(context);
 
-    if (user == null) {
-      return const Home();
-    } else {
-      return BusSelector();
-    }
+    return const Home();
   }
 }

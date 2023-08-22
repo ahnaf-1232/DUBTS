@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dubts/pages/bus_selector.dart';
 import 'package:dubts/pages/schedule.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -164,6 +165,8 @@ class _HomeState extends State<Home> {
     return newMarkers;
   }
 
+  bool isAnonSigningIn = false;
+
   @override
   Widget build(BuildContext context) {
     return loading
@@ -171,43 +174,81 @@ class _HomeState extends State<Home> {
         : MaterialApp(
             home: Scaffold(
               appBar: AppBar(
-                title: Text('Home'),
+                title: Text(
+                  'Home',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                ),
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 elevation: 0.0,
                 actions: <Widget>[
                   TextButton.icon(
                     icon: const Icon(
                       Icons.schedule,
-                      color: Colors.black,),
-                    label: const Text('Schedule', style: TextStyle(color: Colors.black),),
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'Schedule',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SchedulePage()), // Replace SchedulePage with the actual name of your schedule page widget
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SchedulePage()), // Replace SchedulePage with the actual name of your schedule page widget
                       );
                     },
-                  ),
+                  ), // Add this variable to track signing in state
+
                   TextButton.icon(
-                    icon: const Icon(
-                      Icons.person,
-                      color: Colors.black,
+                    icon: Stack(
+                      alignment: Alignment
+                          .center, // Center the loading indicator within the icon
+                      children: [
+                        if (!isAnonSigningIn)
+                        Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        if (isAnonSigningIn)
+                          SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                      ],
                     ),
-                    label: const Text( 'Be a guide!', style: TextStyle(color: Colors.black),),
+                    label: Text(
+                      'Be a guide!',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () async {
+                      setState(() {
+                        isAnonSigningIn = true; // Set signing in state to true
+                      });
+
                       dynamic result = await _auth.signInAnon();
+
+                      setState(() {
+                        isAnonSigningIn =
+                            false; // Set signing in state back to false
+                      });
+
                       if (result == null) {
                         print('error signing in');
                       } else {
-                        print('signed in');
-                        print(result);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BusSelector()),
+                        );
                       }
                     },
                   ),
-
                 ],
               ),
-
-
               body: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(

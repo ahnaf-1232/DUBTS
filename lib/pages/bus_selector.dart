@@ -41,9 +41,16 @@ class _BusSelectorState extends State<BusSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bus Selector'),
+        title: Text('Bus Selector', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25,),),
         backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: Colors.white, // Change the color of the back button here
+        ),
       ),
       body: Center(
         child: Padding(

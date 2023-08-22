@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapTracker extends StatefulWidget {
@@ -89,17 +90,30 @@ class _MapTrackerState extends State<MapTracker> {
     }
   }
 
-  void setNotification() async {
+  void setNotification(String address) async {
     await BackgroundLocation.setAndroidNotification(
       title: 'Du Bus Tracker',
       message:
-          'Tracking location. latitude: ${latitude}, longitude: ${longitude}',
+          'Your bus is now in $address',
       icon: '@mipmap/ic_launcher',
     );
   }
 
+  Future<String> getAddress(lat, lng) async {
+    List<Placemark> placeMarks = await placemarkFromCoordinates(latitude, longitude);
+    Placemark firstPlaceMark = placeMarks.first;
+    String street = firstPlaceMark.street ?? 'Unknown Place';
+    String subLocality = firstPlaceMark.subLocality ?? '';
+    String locality = firstPlaceMark.locality ?? '';
+
+    String address = '$street,$subLocality,$locality';
+
+    return address;
+  }
+
+
   void getLocation() {
-    BackgroundLocation.getLocationUpdates((location) {
+    BackgroundLocation.getLocationUpdates((location) async {
       print(location);
       setState(() {
         latitude = location.latitude!;
@@ -113,9 +127,9 @@ class _MapTrackerState extends State<MapTracker> {
       });
       print('Started Tracking');
 
-      printLocationData();
+      String address = await getAddress(latitude, longitude);
 
-      setNotification();
+      setNotification(address);
 
       updateLocationData(latitude, longitude);
     });
@@ -125,6 +139,8 @@ class _MapTrackerState extends State<MapTracker> {
     await BackgroundLocation.startLocationService(distanceFilter: 0);
     getLocation();
   }
+
+  bool isLoggedOut = false;
 
   @override
   Widget build(BuildContext context) {
@@ -136,39 +152,81 @@ class _MapTrackerState extends State<MapTracker> {
       child: MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text('Profile'),
+              title: const Text(
+                'Profile',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
               backgroundColor: Theme.of(context).colorScheme.primary,
               elevation: 0.0,
               actions: <Widget>[
                 TextButton.icon(
                   icon: const Icon(
-                      Icons.schedule,
-                    color: Colors.black,),
-                  label: const Text('Schedule', style: TextStyle(color: Colors.black),),
+                    Icons.schedule,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    'Schedule',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SchedulePage()), // Replace SchedulePage with the actual name of your schedule page widget
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SchedulePage()), // Replace SchedulePage with the actual name of your schedule page widget
                     );
                   },
                 ),
-
                 TextButton.icon(
-                  icon: const Icon(Icons.person_2_rounded,  color: Colors.black,),
-                  label: const Text('Logout',  style: TextStyle(color: Colors.black),),
+                  icon: Stack(
+                    alignment: Alignment
+                        .center, // Center the loading indicator within the icon
+                    children: [
+                      if (!isLoggedOut)
+                        Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
+                      if (isLoggedOut)
+                        SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                    ],
+                  ),
+                  label: const Text(
+                    'Logout',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () async {
+                    setState(() {
+                      isLoggedOut = true; // Set signing in state to true
+                    });
+
                     await _auth.logOut();
-                    Navigator.of(context).pop();
+
+                    setState(() {
+                      isLoggedOut = false; // Set signing in state back to false
+                    });
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                 ),
               ],
             ),
-
             body: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
                 center: LatLng(latitude, longitude),
-                zoom: 7,
+                zoom: 10,
                 maxZoom: 18,
               ),
               children: [
@@ -189,24 +247,32 @@ class _MapTrackerState extends State<MapTracker> {
                           children: [
                             Flexible(
                               child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '${widget.busName}',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '(${widget.busCode})',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
+                                fit: BoxFit.fitWidth,
+                                child: Container(
+                                  margin: EdgeInsets.all(10.0),
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.green.shade900,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '${widget.busName}',
+                                        textScaleFactor: 3,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        '(${widget.busCode})',
+                                        textScaleFactor: 3,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

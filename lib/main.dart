@@ -30,12 +30,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => Wrapper(),
-          '/sign_in': (context) => Authenticate(),
-          // '/profile': (context) => Profile(busName: '', busCode: ''),
-        },
+        home: Wrapper(),
       ),
     );
   }
