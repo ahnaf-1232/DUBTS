@@ -4,80 +4,80 @@ import 'package:flutter/material.dart';
 class AddBusData {
   dynamic bus_details = {
     'Basanta': {
-      'downTrip_buses': {
-        [
-          {
-            'bus_code': '5992',
-            'ending_point': 0,
-            'staring_point': 4,
-            'time': TimeOfDay(hour: 12, minute: 35),
-          },
-          {
-            'bus_code': '7303',
-            'ending_point': 0,
-            'staring_point': 4,
-            'time': TimeOfDay(hour: 13, minute: 35),
-          },
-          {
-            'bus_code': '6121',
-            'ending_point': 0,
-            'staring_point': 4,
-            'time': TimeOfDay(hour: 14, minute: 35),
-          },
-          {
-            'bus_code': '5973',
-            'ending_point': 0,
-            'staring_point': 4,
-            'time': TimeOfDay(hour: 15, minute: 35),
-          },
-          {
-            'bus_code': '6116',
-            'ending_point': 0,
-            'staring_point': 4,
-            'time': TimeOfDay(hour: 16, minute: 35),
-          },
-          {
-            'bus_code': '5817',
-            'ending_point': 0,
-            'staring_point': 4,
-            'time': TimeOfDay(hour: 17, minute: 35),
-          },
-        ]
-      },
-      'upTrip_buses': {
-        [
-          {
-            'bus_code': '6071',
-            'ending_point': 4,
-            'staring_point': 0,
-            'time': TimeOfDay(hour: 7, minute: 00),
-          },
-          {
-            'bus_code': '5973',
-            'ending_point': 4,
-            'staring_point': 0,
-            'time': TimeOfDay(hour: 7, minute: 40),
-          },
-          {
-            'bus_code': '6116',
-            'ending_point': 4,
-            'staring_point': 0,
-            'time': TimeOfDay(hour: 8, minute: 20),
-          },
-          {
-            'bus_code': '5849',
-            'ending_point': 4,
-            'staring_point': 0,
-            'time': TimeOfDay(hour: 9, minute: 00),
-          },
-          {
-            'bus_code': '5973',
-            'ending_point': 4,
-            'staring_point': 0,
-            'time': TimeOfDay(hour: 10, minute: 00),
-          },
-        ],
-      },
+      'downTrip_buses':
+      [
+        {
+          'bus_code': '5992',
+          'ending_point': 0,
+          'staring_point': 4,
+          'time': TimeOfDay(hour: 12, minute: 35),
+        },
+        {
+          'bus_code': '7303',
+          'ending_point': 0,
+          'staring_point': 4,
+          'time': TimeOfDay(hour: 13, minute: 35),
+        },
+        {
+          'bus_code': '6121',
+          'ending_point': 0,
+          'staring_point': 4,
+          'time': TimeOfDay(hour: 14, minute: 35),
+        },
+        {
+          'bus_code': '5973',
+          'ending_point': 0,
+          'staring_point': 4,
+          'time': TimeOfDay(hour: 15, minute: 35),
+        },
+        {
+          'bus_code': '6116',
+          'ending_point': 0,
+          'staring_point': 4,
+          'time': TimeOfDay(hour: 16, minute: 35),
+        },
+        {
+          'bus_code': '5817',
+          'ending_point': 0,
+          'staring_point': 4,
+          'time': TimeOfDay(hour: 17, minute: 35),
+        },
+      ]
+      ,
+      'upTrip_buses':
+      [
+        {
+          'bus_code': '6071',
+          'ending_point': 4,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 7, minute: 00),
+        },
+        {
+          'bus_code': '5973',
+          'ending_point': 4,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 7, minute: 40),
+        },
+        {
+          'bus_code': '6116',
+          'ending_point': 4,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 8, minute: 20),
+        },
+        {
+          'bus_code': '5849',
+          'ending_point': 4,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 9, minute: 00),
+        },
+        {
+          'bus_code': '5973',
+          'ending_point': 4,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 10, minute: 00),
+        },
+      ]
+      ,
       'route': [
         'Khilgaon Police Fari',
         'Malibagh Community Center',
@@ -499,6 +499,59 @@ class AddBusData {
       ],
       'name': 'Ullash',
     },
+    'Falguni': {
+      'downTrip_buses': [
+        {
+          'bus_code': '6139',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 13, minute: 10),
+        },
+        {
+          'bus_code': '6217',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 14, minute: 50),
+        },
+        {
+          'bus_code': '6051',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 16, minute: 10),
+        },
+        {
+          'bus_code': '6139',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 17, minute: 10),
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '6051',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 6, minute: 40),
+        },
+        {
+          'bus_code': '6139',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 7, minute: 40),
+        },
+        {
+          'bus_code': '6051',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 8, minute: 40),
+        },
+      ],
+      'route': [
+
+      ],
+      'name': 'Falguni',
+    },
+
 
     // ---buses from Sadia
   };
