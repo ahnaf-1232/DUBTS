@@ -1,6 +1,5 @@
 import 'package:dubts/models/user.dart';
 import 'package:dubts/pages/Home.dart';
-import 'package:dubts/pages/bus_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

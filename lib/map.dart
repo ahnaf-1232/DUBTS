@@ -158,7 +158,7 @@ class _MapTrackerState extends State<MapTracker> {
         home: Scaffold(
             appBar: AppBar(
               title: const Text(
-                'Profile',
+                'Tracker',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

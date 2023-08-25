@@ -38,6 +38,27 @@ class DatabaseService{
     }
   }
 
+  Future<dynamic> fetchAllDocuments(String collectionName) async {
+    try {
+      final collectionReference = _fireStore.collection(collectionName);
+      final querySnapshot = await collectionReference.get();
+
+      final documents = querySnapshot.docs;
+
+      Map<String, dynamic> data = {};
+
+      for (var document in documents) {
+        // Access individual fields within the document
+        data = document.data();
+      }
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+
   static void printAllBusDetails(Map<String, List<String>> allBusDetails) {
     print("All Bus Details:");
     allBusDetails.forEach((name, codes) {

@@ -294,7 +294,7 @@ class AddBusData {
       'upTrip_buses': [
         {
           'bus_code': '6262',
-          'ending_point': 12,
+          'ending_point': 13,
           'staring_point': 0,
           'time': '05:50 AM',
         },
