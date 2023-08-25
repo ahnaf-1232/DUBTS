@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class DatabaseService{
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
   static Future<Map<String, List<String>>> fetchBusData() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =
-      await firestore.collection('bus').get();
+      await fireStore.collection('bus').get();
 
       Map<String, List<String>> busDetails = {};
       snapshot.docs.forEach((doc) {
@@ -19,6 +22,19 @@ class DatabaseService{
     } catch (e) {
       print("Error fetching data: $e");
       return {};
+    }
+  }
+
+  Future<void> addBusDetailsToDB(dynamic bus_details) async {
+    try {
+      await _fireStore.collection('bus_schedules').add(bus_details);
+      if (kDebugMode) {
+        print("bus data added");
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

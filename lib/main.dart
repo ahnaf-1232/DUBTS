@@ -1,7 +1,4 @@
-// import 'package:dubts/pages/Home.dart';
-// import 'package:dubts/pages/profile.dart';
-import 'package:dubts/pages/profile.dart';
-import 'package:dubts/screens/authenticate/authenticate.dart';
+import 'package:dubts/pages/bus_details_adder.dart';
 import 'package:dubts/screens/wrapper.dart';
 import 'package:dubts/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +27,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
-        home: Wrapper(),
+        // home: Wrapper(),
+        home: BusDetailsAdder(),
       ),
     );
   }
