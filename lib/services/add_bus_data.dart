@@ -87,6 +87,420 @@ class AddBusData {
       ],
       'name': 'Basanta',
     },
+
+    //buses from Sadia
+    'Srabon': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 12, minute: 15),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 13, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 14, minute: 20),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 15, minute: 40),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 16, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 17, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 5,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 17, minute: 30),
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 7, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 7, minute: 20),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 7, minute: 55),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 8, minute: 15),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 9, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 5,
+          'time': TimeOfDay(hour: 10, minute: 00),
+        },
+      ],
+      'route': [
+        'Mugda Stadium',
+        'Mugda Bisshoroad',
+        'Mugda Medical',
+        'Buddha mandir',
+        'Bashabo',
+        'Khilgaon'
+      ],
+      'name': 'Srabon',
+    },
+    'Baishakhi': {
+      'downTrip_buses': [
+        {
+          'bus_code': '6231',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 12, minute: 30),
+        },
+        {
+          'bus_code': '5817',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 13, minute: 15),
+        },
+        {
+          'bus_code': '5900',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 14, minute: 20),
+        },
+        {
+          'bus_code': '6204',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 15, minute: 30),
+        },
+        {
+          'bus_code': '5866',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 16, minute: 30),
+        },
+        {
+          'bus_code': '5899',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 17, minute: 00),
+        },
+        {
+          'bus_code': '6231',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 17, minute: 30),
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '5900',
+          'ending_point': 0,
+          'staring_point': 11,
+          'time': TimeOfDay(hour: 6, minute: 30),
+        },
+        {
+          'bus_code': '5817',
+          'ending_point': 0,
+          'staring_point': 11,
+          'time': TimeOfDay(hour: 6, minute: 50),
+        },
+        {
+          'bus_code': '5867',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': TimeOfDay(hour: 7, minute: 30),
+        },
+        {
+          'bus_code': '6231',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': TimeOfDay(hour: 8, minute: 00),
+        },
+        {
+          'bus_code': '6204',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': TimeOfDay(hour: 8, minute: 45),
+        },
+        {
+          'bus_code': '6264',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': TimeOfDay(hour: 9, minute: 25),
+        },
+        {
+          'bus_code': '5900',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': TimeOfDay(hour: 10, minute: 00),
+        },
+      ],
+      'route': [
+        'Second Gate',
+        'Taltola',
+        'Shewrapara bus stand',
+        'Kazipara over bridge',
+        '10 number islami bank',
+        'Water tank',
+        '13 number',
+        'Police staff college',
+        'POlice college',
+        '14 number',
+        'Mili super market',
+        'kochukhet',
+      ],
+      'name': 'Baishakhi',
+    },
+    'Taranga': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 12, minute: 15),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 13, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 14, minute: 20),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 15, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 16, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 17, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 17, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 26,
+          'staring_point': 14,
+          'time': TimeOfDay(hour: 17, minute: 35),
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 13,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 7, minute: 10),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 13,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 7, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 13,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 8, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 13,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 8, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 13,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 9, minute: 10),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 13,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 10, minute: 10),
+        },
+      ],
+      'route': [
+        //up
+        'DRMC',
+        'Moitree Counter',
+        'Mohammadpur Bus stand',
+        'Academia',
+        'Dhanmondi 27',
+        'Dhanmondi 19',
+        'Dhanmondi 15',
+        'Zigatola',
+        'Neelkhet mor',
+        'Arts building',
+        'TSC',
+        'Motaher Hossain building',
+        'Mokarram building',
+        'Curzon Hall', //13
+
+            //down
+        'Curzon Hall',  //14
+        'TSC',
+        'VC Chottor',
+        'Zigatola',
+        'Dhanmondi 15',
+        'Star Kabab',
+        'Shankar',
+        'Graphics Art building',
+        'Mohammadpur Bus stand',
+        'Noorjahan Road',
+        'Salimullah Road',
+        'Town hall',
+        'Asad Gate' //26
+      ],
+      'name': 'Taranga',
+    },
+    'Ullash': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 7,
+          'time': TimeOfDay(hour: 12, minute: 10),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 7,
+          'time': TimeOfDay(hour: 13, minute: 10),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 7,
+          'time': TimeOfDay(hour: 14, minute: 10),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 7,
+          'time': TimeOfDay(hour: 15, minute: 10),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 7,
+          'time': TimeOfDay(hour: 16, minute: 15),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 7,
+          'time': TimeOfDay(hour: 17, minute: 35),
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 7,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 7, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 7,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 8, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 7,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 8, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 7,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 9, minute: 00),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 7,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 9, minute: 30),
+        },
+        {
+          'bus_code': '',
+          'ending_point': 7,
+          'staring_point': 0,
+          'time': TimeOfDay(hour: 10, minute: 00),
+        },
+      ],
+      'route': [
+        'Postogola',
+        'Jurain',
+        'Dholaipaar',
+        'Nobinagar',
+        'Mir hajaribag',
+        'Doyagong',
+        'Tikatuli',
+        'Campus'
+      ],
+      'name': 'Ullash',
+    },
+
+    // ---buses from Sadia
   };
 
   Future<void> addBusDetails() async {
@@ -94,165 +508,3 @@ class AddBusData {
     await DatabaseService().addBusDetailsToDB(bus_details);
   }
 }
-
-// 'up_trip': {
-// 'Kinchit': {
-// '7:00 AM': {
-// 'route': ['Arambagh', 'Kamalapur', 'Ideal School and College gate', 'Rajarbagh', 'Malibagh', 'Mouchak', 'Wireless', 'VC Chattar', 'Curzon Hall'],
-// 'starting_point': 'Arambagh',
-// 'starting_time': TimeOfDay(hour: 7, minute: 00),
-// },
-// '8:00 AM': {
-// 'route': ['Arambagh', 'Kamalapur', 'Ideal School and College gate', 'Rajarbagh', 'Malibagh', 'Mouchak', 'Wireless', 'VC Chattar', 'Curzon Hall'],
-// 'starting_point': 'Arambagh',
-// 'starting_time': TimeOfDay(hour: 8, minute: 00),
-//
-// },
-// '8:50 AM': {
-// 'route': ['Arambagh', 'Kamalapur', 'Ideal School and College gate', 'Rajarbagh', 'Malibagh', 'Mouchak', 'Wireless', 'VC Chattar', 'Curzon Hall'],
-// 'starting_point': 'Arambagh',
-// 'starting_time': TimeOfDay(hour: 8, minute: 50),
-// },
-// '9:50 AM': {
-// 'route': ['Arambagh', 'Kamalapur', 'Ideal School and College gate', 'Rajarbagh', 'Malibagh', 'Mouchak', 'Wireless', 'VC Chattar', 'Curzon Hall'],
-// 'starting_point': 'Arambagh',
-// 'starting_time': TimeOfDay(hour: 9, minute: 50),
-// },
-// },
-// 'Khanika': {
-// '5:50 AM': {
-// 'route': ['Shibbari', 'Chourasta', 'Bypass', 'Maleker Bari', 'Signboard', 'Board Bazer', 'Boro Bari', 'College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'Shibbari',
-// 'bus_code': '6249',
-// 'starting_time': TimeOfDay(hour: 5, minute: 50),
-// },
-// '6:10 AM': {
-// 'route': ['Shibbari', 'Chourasta', 'Bypass', 'Maleker Bari', 'Signboard', 'Board Bazer', 'Boro Bari', 'College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'Shibbari',
-// 'bus_code': '6213',
-// 'starting_time': TimeOfDay(hour: 6, minute: 10),
-// },
-// '6:20 AM': {
-// 'route': ['College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'College Gate',
-// 'bus_code': '6262',
-// 'starting_time': TimeOfDay(hour: 6, minute: 20),
-// },
-// '6:40 AM': {
-// 'route': ['College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur','DU'],
-// 'starting_point': 'College Gate',
-// 'bus_code': '5709',
-// 'starting_time': TimeOfDay(hour: 6, minute: 40),
-// },
-// '7:00 AM': {
-// 'route': ['College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'College Gate',
-// 'bus_code': '5724',
-// 'starting_time': TimeOfDay(hour: 7, minute: 00),
-// },
-// '7:30 AM': {
-// 'route': ['College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'College Gate',
-// 'bus_code': '6203',
-// 'starting_time': TimeOfDay(hour: 7, minute: 30),
-// },
-// '8:15 AM': {
-// 'route': ['College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'College Gate',
-// 'bus_code': '6824',
-// 'starting_time': TimeOfDay(hour: 8, minute: 15),
-// },
-// '9:00 AM': {
-// 'route': ['College Gate', 'Station Road', 'Tongi Bazer', 'Abdullahpur', 'House Building', 'Azampur', 'DU'],
-// 'starting_point': 'College Gate',
-// 'bus_code': '6230',
-// 'starting_time': TimeOfDay(hour: 9, minute: 00),
-// },
-//
-// }
-//
-// },
-// 'down_trip': {
-// 'Kinchit': {
-// '12:30 PM': {
-// 'route': ['Curzon Hall', 'VC Chattar', 'Wireless', 'Mouchak', 'Malibagh', 'Rajarbagh', 'Ideal School and College gate', 'Kamalapur', 'Arambagh'],
-// 'starting_point': 'Curzon Hall',
-// 'starting_time': TimeOfDay(hour: 12, minute: 30),
-// },
-// '1:30 AM': {
-// 'route': ['Curzon Hall', 'VC Chattar', 'Wireless', 'Mouchak', 'Malibagh', 'Rajarbagh', 'Ideal School and College gate', 'Kamalapur', 'Arambagh'],
-// 'starting_point': 'Curzon Hall',
-// 'starting_time': TimeOfDay(hour: 13, minute: 30),
-// },
-// '2:30 AM': {
-// 'route': ['Curzon Hall', 'VC Chattar', 'Wireless', 'Mouchak', 'Malibagh', 'Rajarbagh', 'Ideal School and College gate', 'Kamalapur', 'Arambagh'],
-// 'starting_point': 'Curzon Hall',
-// 'starting_time': TimeOfDay(hour: 14, minute: 30),
-// },
-// '3:20 AM': {
-// 'route': ['Curzon Hall', 'VC Chattar', 'Wireless', 'Mouchak', 'Malibagh', 'Rajarbagh', 'Ideal School and College gate', 'Kamalapur', 'Arambagh'],
-// 'starting_point': 'Curzon Hall',
-// 'starting_time': TimeOfDay(hour: 15, minute: 20),
-// },
-// '4:20 AM': {
-// 'route': ['Curzon Hall', 'VC Chattar', 'Wireless', 'Mouchak', 'Malibagh', 'Rajarbagh', 'Ideal School and College gate', 'Kamalapur', 'Arambagh'],
-// 'starting_point': 'Curzon Hall',
-// 'starting_time': TimeOfDay(hour: 16, minute: 20),
-// },
-// '5:30 AM': {
-// 'route': ['Curzon Hall', 'VC Chattar', 'Wireless', 'Mouchak', 'Malibagh', 'Rajarbagh', 'Ideal School and College gate', 'Kamalapur', 'Arambagh'],
-// 'starting_point': 'Curzon Hall',
-// 'starting_time': TimeOfDay(hour: 17, minute: 30),
-// },
-// },
-// 'Khanika': {
-// '12:15 PM': {
-// 'route': ['Curzon Hall', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate'],
-// 'starting_point': 'Curzon Hall',
-// 'bus_code': '6262',
-// 'starting_time': TimeOfDay(hour: 12, minute: 15),
-// },
-// '1:10 PM': {
-// 'route': ['Curzon Hall', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate'],
-// 'starting_point': 'Curzon Hall',
-// 'bus_code': '5709',
-// 'starting_time': TimeOfDay(hour: 13, minute: 10),
-// },
-// '1:50 PM': {
-// 'route': ['Mall Chattar', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate'],
-// 'starting_point': 'Mall Chattar',
-// 'bus_code': '5724',
-// 'starting_time': TimeOfDay(hour: 13, minute: 50),
-// },
-// '2:30 PM': {
-// 'route': ['Curzon Hall', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate', 'Boro Bari', 'Board Bazer', 'Signboard', 'Maleker Bari', 'Bypass', 'Chourasta', 'Shibbari'],
-// 'starting_point': 'Curzon Hall',
-// 'bus_code': '6249',
-// 'starting_time': TimeOfDay(hour: 14, minute: 30),
-// },
-// '3:30 PM': {
-// 'route': ['VC Chattar', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate'],
-// 'starting_point': 'VC Chattar',
-// 'bus_code': '6203',
-// 'starting_time': TimeOfDay(hour: 15, minute: 30),
-// },
-// '4:15 PM': {
-// 'route': ['Curzon Hall', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate'],
-// 'starting_point': 'Curzon Hall',
-// 'bus_code': '6230',
-// 'starting_time': TimeOfDay(hour: 16, minute: 15),
-// },
-// '5:00 PM': {
-// 'route': ['Curzon Hall', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate', 'Boro Bari', 'Board Bazer', 'Signboard', 'Maleker Bari', 'Bypass', 'Chourasta', 'Shibbari'],
-// 'starting_point': 'Curzon Hall',
-// 'bus_code': '6213',
-// 'starting_time': TimeOfDay(hour: 17, minute: 00),
-// },
-// '5:40 PM': {
-// 'route': ['Curzon Hall', 'Azampur', 'House Building', 'Abdullahpur', 'Tongi Bazer', 'Station Road', 'College Gate'],
-// 'starting_point': 'Curzon Hall',
-// 'bus_code': '6824',
-// 'starting_time': TimeOfDay(hour: 17, minute: 40),
-// },
-// },
-// },
