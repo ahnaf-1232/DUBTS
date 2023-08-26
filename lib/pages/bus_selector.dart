@@ -11,11 +11,10 @@ class BusSelector extends StatefulWidget {
 }
 
 class _BusSelectorState extends State<BusSelector> {
-  String selectedBusName = 'Baishakhi';
-  String selectedBusCode = '3401';
-  List<Bus> buses = [];
+  String selectedBusName = '';
+  String selectedBusCode = '';
 
-  Map<String, List<String>> allBusDetails = {};
+  Map<String, List<String>> allBusDetails={};
 
   @override
   void initState() {
@@ -24,17 +23,43 @@ class _BusSelectorState extends State<BusSelector> {
   }
 
   Future<void> fetchBusData() async {
-    Map<String, List<String>> busDetails = await DatabaseService.fetchBusData();
+    // DatabaseService db=DatabaseService();
+    // dynamic busDetails = await db.fetchAllDocuments('bus_schedules');
+    Map<String, dynamic> busDetails = await DatabaseService().fetchAllDocuments('bus_schedules') as Map<String, dynamic>;
+  Map<String, List<String>> selectionData= {};
+
+    busDetails.forEach((key, value) {
+       Map<String,dynamic> buses=busDetails[key] as Map<String,dynamic>;
+       selectionData[key] = [];
+       List<dynamic> upTrip_buses= buses['upTrip_buses'] as List<dynamic>;
+
+      for(var tripData in upTrip_buses){
+        selectionData[key]!.add(tripData['time']);
+      }
+       List<dynamic> downTrip_buses= buses['downTrip_buses'] as List<dynamic>;
+
+       for(var tripData in downTrip_buses){
+         selectionData[key]!.add(tripData['time']);
+       }
+    });
+    print(selectionData);
+    String name=selectionData.keys.toList().first;
+    List<String>? codes=selectionData[name];
 
     if(mounted) {
       setState(() {
-        allBusDetails = busDetails;
+        allBusDetails = selectionData;
+        selectedBusName=selectionData.keys.toList().first;
+         selectedBusCode= codes![0];
       });
-    }
-    
-    print(busDetails);
 
-    DatabaseService.printAllBusDetails(allBusDetails);
+    };
+
+
+
+    // print("Bus details: ");
+    // print(busDetails);
+
   }
 
   @override
