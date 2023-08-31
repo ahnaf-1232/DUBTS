@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 class DatabaseService{
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
-
   Future<void> addBusDetailsToDB(dynamic bus_details) async {
     try {
       await _fireStore.collection('bus_schedules').add(bus_details);
@@ -37,8 +36,4 @@ class DatabaseService{
       return null;
     }
   }
-
-
-
-
 }

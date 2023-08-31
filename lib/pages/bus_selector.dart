@@ -1,6 +1,5 @@
 import 'package:dubts/pages/profile.dart';
 import 'package:flutter/material.dart';
-import '../models/bus.dart';
 import '../services/databases.dart';
 
 class BusSelector extends StatefulWidget {
