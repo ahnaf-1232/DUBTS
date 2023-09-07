@@ -1,9 +1,15 @@
 import 'package:dubts/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final rtdb = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
+  late DatabaseReference ref = rtdb.ref();
 
   CustomUser? _userFromFirebaseUser(User user) {
     return user != null ? CustomUser(user.uid) : null;
@@ -66,9 +72,27 @@ class AuthService {
     }
   }
 
-  Future logOut() async {
+  Future<void> deleteLocationData(String deviceID, String busName, String busCode) async {
+    print('Deleting location data...');
+    String id = deviceID.replaceAll('.', '');
+    print('Data to be deleted: $id, $busName, $busCode');
+    try {
+      DatabaseReference locationRef = ref
+          .child('location')
+          .child(busName)
+          .child(busCode)
+          .child(id);
+      locationRef.remove();
+    } on Exception catch (e) {
+      print(e);
+    }
+    print('Deleted location data');
+  }
+
+  Future logOut(String deviceID, String busName, String busCode) async {
     try {
       print("in sign out");
+      await deleteLocationData(deviceID, busName, busCode);
       return await FirebaseAuth.instance.signOut();
     } catch (error) {
       if (kDebugMode) {
