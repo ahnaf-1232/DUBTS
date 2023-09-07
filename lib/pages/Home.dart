@@ -69,6 +69,7 @@ class _HomeState extends State<Home> {
   @override
   void dispose() {
     _databsaeRefSubscription?.cancel();
+    print("Home disposed");
     super.dispose();
   }
 
@@ -130,19 +131,34 @@ class _HomeState extends State<Home> {
                       fit: BoxFit.scaleDown,
                       child: Column(
                         children: [
-                          Text(
-                            '$key',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '($busCode)',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold),
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Container(
+                              margin: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: Colors.red.shade900,
+                              ),
+                              child: Column (
+                                children: [
+                                  Text(
+                                    '$key',
+                                    textScaleFactor: 3,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '($busCode)',
+                                    textScaleFactor: 3,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),

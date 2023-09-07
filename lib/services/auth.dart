@@ -77,12 +77,12 @@ class AuthService {
     String id = deviceID.replaceAll('.', '');
     print('Data to be deleted: $id, $busName, $busCode');
     try {
-      DatabaseReference locationRef = ref
+      DatabaseReference locationRef = await ref
           .child('location')
           .child(busName)
           .child(busCode)
           .child(id);
-      locationRef.remove();
+      await locationRef.remove();
     } on Exception catch (e) {
       print(e);
     }

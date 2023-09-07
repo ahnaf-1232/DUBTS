@@ -198,16 +198,21 @@ class _ProfileState extends State<Profile> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
+          // backgroundColor: Theme.of(context).colorScheme.primary,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.home,),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.map),
+              icon: Icon(Icons.map, ),
               label: 'Tracker',
             ),
           ],
+          selectedLabelStyle: TextStyle(color: Colors.white),
+          unselectedLabelStyle: TextStyle(color: Colors.white),
+          selectedIconTheme: IconThemeData(color: Colors.black),
+          selectedItemColor: Colors.black,
           currentIndex: _selectedIndex,
           onTap: (int index) {
             String selectedString = (index == 0) ? 'Home' : 'Tracker';

@@ -11,6 +11,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:workmanager/workmanager.dart';
 
 class MapTracker extends StatefulWidget {
   final String busName;
@@ -32,7 +33,8 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
       app: Firebase.app(),
       databaseURL: 'https://dubts-a851d-default-rtdb.firebaseio.com/');
   late DatabaseReference ref = rtdb.ref();
-  Completer<void> _appCloseCompleter = Completer<void>();
+
+  Timer? _logoutTimer;
 
   late MapController _mapController;
 
@@ -49,8 +51,20 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // _resetLogoutTimer();
+    _startLogoutTimer();
     start_tracking();
     _mapController = MapController();
+  }
+  void _startLogoutTimer() {
+    print('Timer Started');
+    const logoutDuration = Duration(minutes: 90);
+    _logoutTimer = Timer(logoutDuration, () {
+      BackgroundLocation.stopLocationService();
+      _auth.logOut(widget.deviceID, widget.busName, widget.busCode);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
   }
 
   void updateLocationData(double latitude, double longitude) {
@@ -69,6 +83,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
         .child(widget.busCode)
         .child(id);
     locationRef.set(location);
+    locationRef.onDisconnect().remove();
   }
 
   void printLocationData() {
@@ -85,7 +100,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
     }
   }
 
-  void setNotification(String address) async {
+  Future<void> setNotification(String address) async {
     await BackgroundLocation.setAndroidNotification(
       title: 'Du Bus Tracker',
       message: 'Your bus is now in $address',
@@ -126,7 +141,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
 
       String address = await getAddress(latitude, longitude);
 
-      setNotification(address);
+      await setNotification(address);
 
       updateLocationData(latitude, longitude);
     });
@@ -176,8 +191,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
                                     margin: EdgeInsets.all(10.0),
                                     padding: EdgeInsets.all(10.0),
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       color: Colors.red.shade900,
                                     ),
                                     child: Column(
@@ -221,6 +235,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _logoutTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     BackgroundLocation.stopLocationService();
     super.dispose();
@@ -230,11 +245,19 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     print("App State: $state");
     print("Is app detached? ${state == AppLifecycleState.detached}");
-    // await _appCloseCompleter.future;
     if (state == AppLifecycleState.detached) {
       BackgroundLocation.stopLocationService();
-      await _auth.logOut(widget.deviceID, widget.busName, widget.busCode);
+      Workmanager().registerOneOffTask(
+        'data_deletion_task',
+        'delete_data',
+        initialDelay: Duration(seconds: 0), // Delay before the task runs
+        inputData: <String, dynamic>{
+          'deviceID': widget.deviceID,
+          'busName': widget.busName,
+          'busCode': widget.busCode,
+        },
+      );
+      // await _auth.logOut(widget.deviceID, widget.busName, widget.busCode);
     }
-    // _appCloseCompleter.complete();
   }
 }
