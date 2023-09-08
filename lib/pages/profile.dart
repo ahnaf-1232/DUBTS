@@ -8,12 +8,8 @@ import 'package:dubts/shared/loading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../services/auth.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
 
 class Profile extends StatefulWidget {
   final String busName;
@@ -37,8 +33,6 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     initPlatformState();
-    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()?.pendingNotificationRequests();
   }
 
   Future<void> initPlatformState() async {
@@ -181,8 +175,15 @@ class _ProfileState extends State<Profile> {
                   isLoggedOut = true; // Set signing in state to true
                 });
 
-                await _auth.logOut(_deviceData['id'], widget.busName, widget.busCode);
-                await NotificationManager.showBigTextNotification(title: 'Hello', body: 'puck you', fln: flutterLocalNotificationsPlugin);
+                await _auth.logOut(
+                    _deviceData['id'], widget.busName, widget.busCode);
+
+                await NotificationManager.createNotification(
+                    id: 2,
+                    title: 'Tracking Stopped',
+                    body: 'You logged out from tracker.',
+                    locked: false,
+                    channel_name: 'logout_notification_channel');
 
                 setState(() {
                   isLoggedOut = false; // Set signing in state back to false
@@ -208,11 +209,15 @@ class _ProfileState extends State<Profile> {
           // backgroundColor: Theme.of(context).colorScheme.primary,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home,),
+              icon: Icon(
+                Icons.home,
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.map, ),
+              icon: Icon(
+                Icons.map,
+              ),
               label: 'Tracker',
             ),
           ],

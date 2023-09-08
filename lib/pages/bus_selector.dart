@@ -2,6 +2,7 @@ import 'package:dubts/pages/profile.dart';
 import 'package:dubts/shared/loading.dart';
 import 'package:flutter/material.dart';
 import '../services/databases.dart';
+import '../services/notificaton.dart';
 
 class BusSelector extends StatefulWidget {
   const BusSelector({super.key});
@@ -70,6 +71,17 @@ class _BusSelectorState extends State<BusSelector> {
     setState(() {
       loading = false;
     });
+  }
+
+  Future<void> _sendNotification() async {
+    // Your notification logic
+    await NotificationManager.createNotification(
+      id: 1,
+      title: 'Tracking started',
+      body: 'Login Successful. We started tracking your location',
+      locked: false,
+      channel_name: 'login_notification_channel',
+    );
   }
 
   @override
@@ -164,6 +176,7 @@ class _BusSelectorState extends State<BusSelector> {
                       children: [
                         ElevatedButton(
                             onPressed: () {
+                              _sendNotification();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

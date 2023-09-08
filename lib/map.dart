@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:background_location/background_location.dart';
 import 'package:dubts/services/auth.dart';
+import 'package:dubts/services/notificaton.dart';
 import 'package:dubts/shared/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -47,6 +49,8 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   String speed = 'waiting...';
   String time = 'waiting...';
 
+  String lastKnownAddress = '';
+
   @override
   void initState() {
     super.initState();
@@ -56,8 +60,22 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
     start_tracking();
     _mapController = MapController();
   }
-  void _startLogoutTimer() {
+
+  void _startLogoutTimer() async {
     print('Timer Started');
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      // Location service is disabled, prompt the user to enable it
+      await Geolocator.openLocationSettings();
+      // After the user enables location services, they can return to the app
+      // without needing to restart it.
+      return;
+    }
+    
+    print('Location service enabled');
+
     const logoutDuration = Duration(minutes: 90);
     _logoutTimer = Timer(logoutDuration, () {
       BackgroundLocation.stopLocationService();
@@ -101,10 +119,10 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   }
 
   Future<void> setNotification(String address) async {
-    await BackgroundLocation.setAndroidNotification(
-      title: 'Du Bus Tracker',
-      message: 'Your bus is now in $address',
-      icon: '@mipmap/ic_launcher',
+    BackgroundLocation.setAndroidNotification(
+      title: 'Tap to view your current location.',
+      message: 'Your bus is now in $address.',
+      icon: "@mipmap/ic_launcher",
     );
   }
 
@@ -123,7 +141,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
 
   void getLocation() {
     BackgroundLocation.getLocationUpdates((location) async {
-      print(location);
+      // print(location);
       setState(() {
         if (!isLocationAvailable) {
           isLocationAvailable = true;
@@ -139,16 +157,21 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
       });
       print('Started Tracking');
 
-      String address = await getAddress(latitude, longitude);
+      String newAddress = await getAddress(latitude, longitude);
 
-      await setNotification(address);
+      if (newAddress != lastKnownAddress) {
+        lastKnownAddress = newAddress;
+        print('Address Changed: $newAddress');
+
+        await setNotification(lastKnownAddress);
+      }
 
       updateLocationData(latitude, longitude);
     });
   }
 
   void start_tracking() async {
-    await BackgroundLocation.startLocationService(distanceFilter: 0);
+    await BackgroundLocation.startLocationService(distanceFilter: 0,);
     getLocation();
   }
 
@@ -245,7 +268,25 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     print("App State: $state");
     print("Is app detached? ${state == AppLifecycleState.detached}");
-    if (state == AppLifecycleState.detached) {
+    if(state == AppLifecycleState.resumed) {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+      print('App resumed. Service enabled: $serviceEnabled');
+
+      if (!serviceEnabled) {
+        _auth.logOut(widget.deviceID, widget.busName, widget.busCode);
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      }
+      else {
+        WidgetsBinding.instance.addObserver(this);
+        // _resetLogoutTimer();
+        _startLogoutTimer();
+        start_tracking();
+        _mapController = MapController();
+      }
+    }
+    else if (state == AppLifecycleState.detached) {
       BackgroundLocation.stopLocationService();
       Workmanager().registerOneOffTask(
         'data_deletion_task',
