@@ -1,12 +1,17 @@
 import 'package:dubts/screens/wrapper.dart';
 import 'package:dubts/services/auth.dart';
+import 'package:dubts/services/notificaton.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'models/user.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -27,8 +32,20 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationManager.Initialize(flutterLocalNotificationsPlugin);
+  }
 
   @override
   Widget build(BuildContext context) {

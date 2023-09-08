@@ -3,13 +3,17 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dubts/map.dart';
 import 'package:dubts/pages/Home.dart';
 import 'package:dubts/pages/schedule.dart';
+import 'package:dubts/services/notificaton.dart';
 import 'package:dubts/shared/loading.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../services/auth.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 class Profile extends StatefulWidget {
   final String busName;
@@ -33,6 +37,8 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     initPlatformState();
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()?.pendingNotificationRequests();
   }
 
   Future<void> initPlatformState() async {
@@ -176,6 +182,7 @@ class _ProfileState extends State<Profile> {
                 });
 
                 await _auth.logOut(_deviceData['id'], widget.busName, widget.busCode);
+                await NotificationManager.showBigTextNotification(title: 'Hello', body: 'puck you', fln: flutterLocalNotificationsPlugin);
 
                 setState(() {
                   isLoggedOut = false; // Set signing in state back to false

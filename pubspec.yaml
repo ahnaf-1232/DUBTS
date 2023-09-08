@@ -43,6 +43,8 @@ dependencies:
   geocoding: ^2.1.0
   another_stepper: ^1.2.2
   workmanager: ^0.5.1
+  flutter_local_notifications: ^8.2.0
+  android_intent_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
