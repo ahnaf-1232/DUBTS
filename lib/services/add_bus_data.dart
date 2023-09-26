@@ -94,8 +94,8 @@ class AddBusData {
       'route': [
         'Campus',
         'Second Gate',
-        'Sher-E-Bangla Agricultural University (2nd Gate)'
-            'Taltola',
+        'Sher-E-Bangla Agricultural University (2nd Gate)',
+        'Taltola',
         'Shewrapara bus stand (beside Polce Box)',
         'Kazipara over-bridge',
         '10 number shahjalal islami bank',
@@ -213,45 +213,45 @@ class AddBusData {
       'downTrip_buses': [
         {
           'bus_code': '6139',
-          'ending_point': 30,
-          'staring_point': 28,
+          'ending_point': 32,
+          'staring_point': 30,
           'time': '01:10 PM',
         },
         {
           'bus_code': '6217',
-          'ending_point': 30,
-          'staring_point': 28,
+          'ending_point': 32,
+          'staring_point': 30,
           'time': '02:50 PM',
         },
         {
           'bus_code': '6051',
-          'ending_point': 30,
-          'staring_point': 28,
+          'ending_point': 32,
+          'staring_point': 30,
           'time': '04:10 PM',
         },
         {
           'bus_code': '6139',
-          'ending_point': 30,
-          'staring_point': 28,
+          'ending_point': 32,
+          'staring_point': 30,
           'time': '05:10 PM',
         },
       ],
       'upTrip_buses': [
         {
           'bus_code': '6051',
-          'ending_point': 27,
-          'staring_point': 13,
+          'ending_point': 29,
+          'staring_point': 14,
           'time': '06:40 AM',
         },
         {
           'bus_code': '6139',
-          'ending_point': 12,
+          'ending_point': 13,
           'staring_point': 0,
           'time': '07:40 AM',
         },
         {
           'bus_code': '6051',
-          'ending_point': 12,
+          'ending_point': 13,
           'staring_point': 0,
           'time': '08:40 AM',
         },
@@ -270,6 +270,8 @@ class AddBusData {
         'Amtoli',
         'Mohakhali',
         'Nabisco',
+        'Campus',
+
         'Natun Bazer',
         'Bashtola',
         'Shahzadpur',
@@ -285,6 +287,8 @@ class AddBusData {
         'Amtoli',
         'Mohakhali',
         'Nabisco',
+        'Campus',
+
         'Mall Chattor',
         'Gulshan',
         'Badda',
@@ -428,8 +432,8 @@ class AddBusData {
         'Campus',
         'VC Chattar',
         'College gate',
-        'Shib-Bari'
-            'Curzon Hall',
+        'Shib-Bari',
+        'Curzon Hall',
         'College Gate',
         'Shib-Bari'
       ],
@@ -1044,7 +1048,7 @@ class AddBusData {
         {
           'bus_code': '',
           'ending_point': 10,
-          'staring_point': 10,
+          'staring_point': 0,
           'time': '08:00 AM',
         },
       ],
@@ -1314,9 +1318,9 @@ class AddBusData {
         'Bangla College',
         'Technical',
         'Shamoli',
-        'Mal Chattor',
+        'Mall Chattor',
         'TSC',
-        'Curzon'
+        'Curzon Hall'
       ],
       'name': 'Chaitali',
     },

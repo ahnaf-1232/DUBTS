@@ -1,3 +1,4 @@
+import 'package:dubts/pages/bus_details_adder.dart';
 import 'package:dubts/screens/wrapper.dart';
 import 'package:dubts/services/auth.dart';
 import 'package:dubts/services/notificaton.dart';
