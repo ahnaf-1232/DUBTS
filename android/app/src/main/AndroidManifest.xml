@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="Du Bus Tracker"
+        android:label="বাস কই"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

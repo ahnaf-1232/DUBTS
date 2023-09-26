@@ -983,6 +983,116 @@ class AddBusData {
       ],
       'name': 'Hemonto',
     },
+    'Chaitali': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 8,
+          'time': '12:30 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 8,
+          'time': '01:30 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '02:30 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '03:30 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 8,
+          'time': '04:20 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '05:00 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '05:30 PM',
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '06:40 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '06:40 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '07:10 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '07:10 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '07:50 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '07:50 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '09:25 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '09:25 AM',
+        },
+      ],
+      'route': [
+        'Mirpur-12',
+        'Mirpur-11.5',
+        'Mirpur-6',
+        'Mirpur-2',
+        'Mirpur-1',
+        'Bangla College',
+        'Technical',
+        'Shamoli',
+        'Mal Chattor',
+        'TSC',
+        'Curzon'
+      ],
+      'name': 'Chaitali',
+    },
   };
 
   Future<void> addBusDetails() async {
