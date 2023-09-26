@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
   // final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
-  StreamSubscription<DatabaseEvent>? _databsaeRefSubscription;
+  StreamSubscription<DatabaseEvent>? _databaseRefSubscription;
 
   @override
   void initState() {
@@ -51,9 +51,9 @@ class _HomeState extends State<Home> {
 
   Future<void> _initializeFirebase() async {
     await Firebase.initializeApp();
-    final rtdb = FirebaseDatabase.instance;
-    locationRef = rtdb.ref().child('location');
-    _databsaeRefSubscription = locationRef.onValue.listen((event) {
+    final realtimeDB = FirebaseDatabase.instance;
+    locationRef = realtimeDB.ref().child('location');
+    _databaseRefSubscription = locationRef.onValue.listen((event) {
       if (mounted && event.snapshot.value != null) {
         setState(() {
           markers = _createMarkersFromData(event.snapshot.value as Map);
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    _databsaeRefSubscription?.cancel();
+    _databaseRefSubscription?.cancel();
     print("Home disposed");
     super.dispose();
   }

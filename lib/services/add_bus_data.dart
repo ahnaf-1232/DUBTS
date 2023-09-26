@@ -759,6 +759,103 @@ class AddBusData {
       ],
       'name': 'Ullash',
     },
+    'Moitri': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 19,
+          'time': '12:15 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 19,
+          'time': '01:15 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 19,
+          'time': '02:15 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 19,
+          'time': '03:15 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 19,
+          'time': '04:05 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 19,
+          'time': '05:15 PM',
+        },
+
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 19,
+          'staring_point': 0,
+          'time': '06:25 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 19,
+          'staring_point': 0,
+          'time': '07:10 AM',
+        },
+
+        {
+          'bus_code': '',
+          'ending_point': 19,
+          'staring_point': 10,
+          'time': '08:00 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 19,
+          'staring_point': 0,
+          'time': '08:20 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 19,
+          'staring_point': 0,
+          'time': '09:15 AM',
+        },
+      ],
+      'route': [
+        'IIT School',
+        'Pathangoli',
+        'Chowdhuri para',
+        '2 number',
+        'Jaulapar',
+        'Adomji',
+        'power House',
+        'Siddhirgong',
+        'Chittagong road',
+        'Golakata',
+        'Ranimohol',
+        'Sarulia bazar',
+        'Staff quarter',
+        'basher pool',
+        'Konapara',
+        'Matuail',
+        'Bhanga',
+        'Press',
+        'Jatrabari',
+        'Campus'
+      ],
+      'name': 'Moitri',
+    },
   };
 
   Future<void> addBusDetails() async {
