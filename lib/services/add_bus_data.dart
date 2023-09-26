@@ -856,6 +856,133 @@ class AddBusData {
       ],
       'name': 'Moitri',
     },
+    'Anondo': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 12,
+          'time': '01:10 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 12,
+          'time': '02:30 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 12,
+          'time': '04:05 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 12,
+          'time': '05:10 PM',
+        },
+
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 12,
+          'staring_point': 0,
+          'time': '06:50 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 12,
+          'staring_point': 0,
+          'time': '07:30 AM',
+        },
+
+        {
+          'bus_code': '',
+          'ending_point': 12,
+          'staring_point': 10,
+          'time': '08:50 AM',
+        },
+
+      ],
+      'route': [
+        'Nondir para',
+        '2 number gate',
+        'Kalir bazar',
+        'Chashara',
+        'Zilla Proshashon',
+        'Roni market',
+        'Stadium',
+        'Buigor',
+        'Jalkuri',
+        'Sign Board',
+        'Curzon Hall',
+        'TSC',
+        'Mol Chottor',
+
+      ],
+      'name': 'Anondo',
+    },
+    'Hemonto': {
+      'downTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '01:10 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '03:30 PM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 0,
+          'staring_point': 10,
+          'time': '05:00 PM',
+        },
+      ],
+      'upTrip_buses': [
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '06:20 AM',
+        },
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 0,
+          'time': '07:30 AM',
+        },
+
+        {
+          'bus_code': '',
+          'ending_point': 10,
+          'staring_point': 10,
+          'time': '08:00 AM',
+        },
+
+      ],
+      'route': [
+        'Savar',
+        'Nobinogor joya',
+        'Bish mail',
+        'CMB',
+        'Savar stand',
+        'Khana stand',
+        'Genda',
+        'Fulbaria',
+        'Olain',
+        'Gabtoli',
+        'Campus',
+
+      ],
+      'name': 'Hemonto',
+    },
   };
 
   Future<void> addBusDetails() async {
