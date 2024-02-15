@@ -14,8 +14,9 @@ import '../services/auth.dart';
 class Profile extends StatefulWidget {
   final String busName;
   final String busCode;
+  final String busTime;
 
-  const Profile({required this.busName, required this.busCode});
+  const Profile({required this.busName, required this.busCode, required this.busTime});
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -202,6 +203,7 @@ class _ProfileState extends State<Profile> {
               busName: widget.busName,
               busCode: widget.busCode,
               deviceID: _deviceData['id'],
+              busTime: widget.busTime,
             ),
           ],
         ),

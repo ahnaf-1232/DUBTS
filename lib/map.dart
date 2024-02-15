@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:background_location/background_location.dart';
 import 'package:dubts/services/auth.dart';
-import 'package:dubts/services/notificaton.dart';
 import 'package:dubts/shared/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -14,14 +15,19 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:http/http.dart' as http;
 
 class MapTracker extends StatefulWidget {
   final String busName;
   final String busCode;
+  final String busTime;
   final String deviceID;
 
   const MapTracker(
-      {required this.busName, required this.busCode, required this.deviceID});
+      {required this.busName,
+      required this.busCode,
+      required this.deviceID,
+      required this.busTime});
 
   @override
   _MapTrackerState createState() => _MapTrackerState();
@@ -73,7 +79,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
       // without needing to restart it.
       return;
     }
-    
+
     print('Location service enabled');
 
     const logoutDuration = Duration(minutes: 90);
@@ -85,7 +91,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
     });
   }
 
-  void updateLocationData(double latitude, double longitude) {
+  void updateLocationData(double latitude, double longitude) async {
     Map<String, double> location = {
       'lat': latitude,
       'lng': longitude,
@@ -100,6 +106,33 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
         .child(widget.busName)
         .child(widget.busCode)
         .child(id);
+
+    var uri = Uri.parse(
+        "http://172.16.105.219:6069/dubts/bus-location/store-location/${widget.busCode}");
+    print(uri);
+    DateTime now = DateTime.now();
+    // Extract date
+    String dateOnly = DateFormat('yyyy-MM-dd').format(now);
+
+    // Extract time
+    String timeOnly = DateFormat('HH:mm:ss').format(now);
+
+    try {
+      var response = await http.put(uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json', // Specify JSON content type
+          },
+          body: json.encode({
+            "date": dateOnly.toString(),
+            "time": timeOnly.toString(),
+            "latitude": latitude.toString(),
+            "longitude": longitude.toString(),
+          }));
+
+      print('Server response: ${response}');
+    } catch (e) {
+      print('Error making POST request: $e');
+    }
     locationRef.set(location);
     locationRef.onDisconnect().remove();
   }
@@ -171,7 +204,9 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   }
 
   void start_tracking() async {
-    await BackgroundLocation.startLocationService(distanceFilter: 0,);
+    await BackgroundLocation.startLocationService(
+      distanceFilter: 0,
+    );
     getLocation();
   }
 
@@ -268,7 +303,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     print("App State: $state");
     print("Is app detached? ${state == AppLifecycleState.detached}");
-    if(state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed) {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
       print('App resumed. Service enabled: $serviceEnabled');
@@ -277,16 +312,14 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
         _auth.logOut(widget.deviceID, widget.busName, widget.busCode);
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-      }
-      else {
+      } else {
         WidgetsBinding.instance.addObserver(this);
         // _resetLogoutTimer();
         _startLogoutTimer();
         start_tracking();
         _mapController = MapController();
       }
-    }
-    else if (state == AppLifecycleState.detached) {
+    } else if (state == AppLifecycleState.detached) {
       BackgroundLocation.stopLocationService();
       Workmanager().registerOneOffTask(
         'data_deletion_task',

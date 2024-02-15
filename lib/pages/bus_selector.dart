@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dubts/pages/profile.dart';
 import 'package:dubts/shared/loading.dart';
 import 'package:flutter/material.dart';
-import '../services/databases.dart';
 import '../services/notificaton.dart';
+import 'package:http/http.dart' as http;
 
 class BusSelector extends StatefulWidget {
   const BusSelector({super.key});
@@ -14,9 +17,10 @@ class BusSelector extends StatefulWidget {
 class _BusSelectorState extends State<BusSelector> {
   String selectedBusName = '';
   String selectedBusCode = '';
+  String selectedBusTime = '';
   bool loading = false;
 
-  Map<String, List<String>> allBusDetails = {};
+  Map<String, List<Map<String, String>>> allBusDetails = {};
 
   @override
   void initState() {
@@ -25,41 +29,62 @@ class _BusSelectorState extends State<BusSelector> {
   }
 
   Future<void> fetchBusData() async {
-    // DatabaseService db=DatabaseService();
-    // dynamic busDetails = await db.fetchAllDocuments('bus_schedules');
-    Map<String, dynamic> busDetails = await DatabaseService()
-        .fetchAllDocuments('bus_schedules') as Map<String, dynamic>;
-    Map<String, List<String>> selectionData = {};
+    var uri = Uri.parse(
+        "http://172.16.105.219:6069/dubts/bus-details/get-all-bus-data");
 
-    busDetails.forEach((key, value) {
-      Map<String, dynamic> buses = busDetails[key] as Map<String, dynamic>;
-      selectionData[key] = [];
-      List<dynamic> upTrip_buses = buses['upTrip_buses'] as List<dynamic>;
+    try {
+      dynamic response = await http.get(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+      );
 
-      for (var tripData in upTrip_buses) {
-        selectionData[key]!.add(tripData['time']);
-      }
-      List<dynamic> downTrip_buses = buses['downTrip_buses'] as List<dynamic>;
+      Map<String, List<Map<String, String>>> selectionData = {};
 
-      for (var tripData in downTrip_buses) {
-        selectionData[key]!.add(tripData['time']);
-      }
-    });
-    print(selectionData);
-    String name = selectionData.keys.toList().first;
-    List<String>? codes = selectionData[name];
+      List busDetails = jsonDecode(response.body) as List;
 
-    if (mounted) {
-      setState(() {
-        allBusDetails = selectionData;
-        selectedBusName = selectionData.keys.toList().first;
-        selectedBusCode = codes![0];
+      busDetails.forEach((bus) {
+        selectionData[bus["name"]] = [];
+        List<dynamic> upTrip_buses = bus["upTripBuses"] as List<dynamic>;
+
+        for (var tripData in upTrip_buses) {
+          selectionData[bus["name"]]
+              ?.add({"time": tripData['time'], "code": tripData["busCode"]});
+        }
+
+        List<dynamic> downTrip_buses = bus['downTripBuses'] as List<dynamic>;
+
+        for (var tripData in downTrip_buses) {
+          selectionData[bus["name"]]
+              ?.add({"time": tripData['time'], "code": tripData["busCode"]});
+        }
       });
-    }
-    ;
 
-    // print("Bus details: ");
-    // print(busDetails);
+      Map<String, dynamic> firstBus = busDetails[0];
+      String busName = firstBus["name"];
+      List<dynamic> upTripBuses = firstBus["upTripBuses"];
+      Map<String, dynamic> firstUpTrip =
+          upTripBuses.isNotEmpty ? upTripBuses[0] : {};
+
+      String firstBusCode = firstUpTrip["busCode"] ?? "";
+      String firstBusTime = firstUpTrip["time"] ?? "";
+
+      print("Bus Name: ${busName}");
+      print("First Bus Code: $firstBusCode");
+      print("First Bus Time: $firstBusTime");
+
+      if (mounted) {
+        setState(() {
+          allBusDetails = selectionData;
+          selectedBusName = busName;
+          selectedBusCode = firstBusCode;
+          selectedBusTime = firstBusTime;
+        });
+      }
+    } catch (e) {
+      throw HttpException(e.toString());
+    }
   }
 
   Future<void> _showLoadingScreen() async {
@@ -133,8 +158,16 @@ class _BusSelectorState extends State<BusSelector> {
                           onChanged: (String? selectedValue) {
                             setState(() {
                               selectedBusName = selectedValue!;
+                              selectedBusTime =
+                                  (allBusDetails[selectedBusName] != null
+                                      ? allBusDetails[selectedBusName]![0]
+                                          ['time']
+                                      : null)!;
                               selectedBusCode =
-                                  allBusDetails[selectedBusName]![0];
+                                  (allBusDetails[selectedBusName] != null
+                                      ? allBusDetails[selectedBusName]![0]
+                                          ['code']
+                                      : null)!;
                             });
                           },
                         ),
@@ -151,18 +184,24 @@ class _BusSelectorState extends State<BusSelector> {
                           width: 30,
                         ),
                         DropdownButton(
-                          value: selectedBusCode,
-                          items: allBusDetails[selectedBusName]
-                              ?.map((String items) {
+                          value: selectedBusTime,
+                          items: allBusDetails[selectedBusName]!.map((items) {
                             return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
+                              value: items["time"],
+                              child: Text(items["time"]!),
                             );
                           }).toList(),
                           icon: const Icon(Icons.keyboard_arrow_down),
                           onChanged: (String? selectedValue) {
                             setState(() {
-                              selectedBusCode = selectedValue!;
+                              // print(allBusDetails[selectedBusName]);
+                              allBusDetails[selectedBusName]
+                                  ?.forEach((busDetails) {
+                                if(busDetails["time"] == selectedValue) {
+                                  selectedBusCode = busDetails["code"]!;
+                                  selectedBusTime = busDetails["time"]!;
+                                }
+                              });
                             });
                           },
                         ),
@@ -183,6 +222,7 @@ class _BusSelectorState extends State<BusSelector> {
                                     builder: (context) => Profile(
                                           busName: selectedBusName,
                                           busCode: selectedBusCode,
+                                          busTime: selectedBusTime,
                                         )),
                               );
                             },
