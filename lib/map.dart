@@ -108,7 +108,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
         .child(id);
 
     var uri = Uri.parse(
-        "http://172.16.105.219:6069/dubts/bus-location/store-location/${widget.busCode}");
+        "http://51.20.44.132:6069/dubts/bus-location/store-location/${widget.busCode}");
     print(uri);
     DateTime now = DateTime.now();
     // Extract date

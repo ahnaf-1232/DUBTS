@@ -30,7 +30,7 @@ class _BusSelectorState extends State<BusSelector> {
 
   Future<void> fetchBusData() async {
     var uri = Uri.parse(
-        "http://172.16.105.219:6069/dubts/bus-details/get-all-bus-data");
+        "http://51.20.44.132:6069/dubts/bus-details/get-all-bus-data");
 
     try {
       dynamic response = await http.get(
