@@ -35,6 +35,7 @@ class MapTracker extends StatefulWidget {
 
 class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
   final AuthService _auth = AuthService();
+  Timer? _timer;
 
   FirebaseDatabase database = FirebaseDatabase.instance;
   final rtdb = FirebaseDatabase.instanceFor(
@@ -65,6 +66,42 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
     _startLogoutTimer();
     start_tracking();
     _mapController = MapController();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _pushLocationData();
+    });
+  }
+
+  void _pushLocationData() async {
+    var uri = Uri.parse(
+        "http://51.21.35.242:6069/dubts/bus-location/store-location/${widget.busCode}");
+    print(uri);
+    DateTime now = DateTime.now();
+    // Extract date
+    String dateOnly = DateFormat('yyyy-MM-dd').format(now);
+
+    // Extract time
+    String timeOnly = DateFormat('HH:mm:ss').format(now);
+
+    try {
+      var response = await http.put(uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json', // Specify JSON content type
+          },
+          body: json.encode({
+            "date": dateOnly.toString(),
+            "time": timeOnly.toString(),
+            "latitude": latitude.toString(),
+            "longitude": longitude.toString(),
+          }));
+
+      print('Server response: ${response}');
+    } catch (e) {
+      print('Error making POST request: $e');
+    }
   }
 
   void _startLogoutTimer() async {
@@ -107,32 +144,6 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
         .child(widget.busCode)
         .child(id);
 
-    var uri = Uri.parse(
-        "http://51.21.35.242:6069/dubts/bus-location/store-location/${widget.busCode}");
-    print(uri);
-    DateTime now = DateTime.now();
-    // Extract date
-    String dateOnly = DateFormat('yyyy-MM-dd').format(now);
-
-    // Extract time
-    String timeOnly = DateFormat('HH:mm:ss').format(now);
-
-    try {
-      var response = await http.put(uri,
-          headers: <String, String>{
-            'Content-Type': 'application/json', // Specify JSON content type
-          },
-          body: json.encode({
-            "date": dateOnly.toString(),
-            "time": timeOnly.toString(),
-            "latitude": latitude.toString(),
-            "longitude": longitude.toString(),
-          }));
-
-      print('Server response: ${response}');
-    } catch (e) {
-      print('Error making POST request: $e');
-    }
     locationRef.set(location);
     locationRef.onDisconnect().remove();
   }
@@ -293,6 +304,7 @@ class _MapTrackerState extends State<MapTracker> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _timer?.cancel();
     _logoutTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     BackgroundLocation.stopLocationService();
