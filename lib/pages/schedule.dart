@@ -35,7 +35,9 @@ class _SchedulePageState extends State<SchedulePage> {
                 SizedBox(height: 10),
                 Text(
                   '***Tap to see trip route.***',
-                  style: TextStyle(fontSize: 15,),
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
                 SizedBox(height: 20),
                 Container(
@@ -196,7 +198,7 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(216,228,212, 1),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           'Bus Schedule',
@@ -239,23 +241,43 @@ class _SchedulePageState extends State<SchedulePage> {
             }
           }
 
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
+          return ListView.builder(
             itemCount: bus_names.length,
             itemBuilder: (BuildContext context, int index) {
               final bus_name = bus_names[index];
 
-              return Container(
-                margin: EdgeInsets.all(9.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Center(
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Container(
+                  margin: EdgeInsets.all(9.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
                   child: ListTile(
-                    title: Text(bus_name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,), textAlign: TextAlign.center,),
+                    leading: Icon(
+                      Icons.bus_alert_rounded,
+                      color: Colors.red.shade700,
+                    ),
+                    title: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        bus_name,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
                     onTap: () =>
                         _showBusDetailsModal(context, bus_details[bus_name]),
                   ),

@@ -1,5 +1,7 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:math';
+import 'package:dubts/env.dart';
 import 'package:dubts/pages/bus_selector.dart';
 import 'package:dubts/pages/schedule.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
 
 import '../services/auth.dart';
 import '../shared/loading.dart';
@@ -19,6 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Timer? _timer;
   final AuthService _auth = AuthService();
   late MapController _mapController;
   late DatabaseReference locationRef;
@@ -34,6 +38,25 @@ class _HomeState extends State<Home> {
     super.initState();
     _mapController = MapController();
     _showLoadingScreen();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _stopTimer();
+    _databaseRefSubscription?.cancel();
+    print("Home disposed");
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _fetchCurrentBusLocations();
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
   }
 
   Future<void> _showLoadingScreen() async {
@@ -66,11 +89,102 @@ class _HomeState extends State<Home> {
     });
   }
 
-  @override
-  void dispose() {
-    _databaseRefSubscription?.cancel();
-    print("Home disposed");
-    super.dispose();
+  final baseUrl = "http://$baseUri/bus-location";
+
+  Future<void> _fetchCurrentBusLocations() async {
+    try {
+      final response =
+          await http.get(Uri.parse(baseUrl + "/get-real-time-data"));
+      if (response.statusCode == 200 && mounted) {
+        List<Marker> _newMarkers = [];
+        Map<String, dynamic> data = jsonDecode((response.body));
+        data.forEach((key, obj) {
+          String name = obj['name'];
+          String code = obj['code'];
+          List<dynamic> data = obj['data'];
+          Map<String, dynamic> firstDataItem = data.isNotEmpty ? data[0] : {};
+
+          double latitude = firstDataItem['latitude'] ?? 0.0;
+          double longitude = firstDataItem['longitude'] ?? 0.0;
+          String time = firstDataItem['time'] ?? '';
+          _newMarkers.add(_createMarker(
+              name: name,
+              code: code,
+              latitude: latitude,
+              longitude: longitude));
+        });
+        print("data: $data");
+        if (data.isNotEmpty) {
+          setState(() {
+            markers = _newMarkers;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error sending GET Req: $e');
+    }
+  }
+
+  Marker _createMarker({name, code, latitude, longitude}) {
+    var marker = Marker(
+      width: 40.0,
+      height: 55.0,
+      point: LatLng(latitude, longitude),
+      builder: (ctx) => Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 6.0),
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.red.shade900,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              '$name',
+                              textScaleFactor: 3,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '($code)',
+                              textScaleFactor: 3,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Icon(
+              Icons.location_pin,
+              color: Colors.red,
+              size: 25.0,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return marker;
   }
 
   double _calculateMode(Map<double, int> occurrences) {
@@ -140,7 +254,7 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 color: Colors.red.shade900,
                               ),
-                              child: Column (
+                              child: Column(
                                 children: [
                                   Text(
                                     '$key',

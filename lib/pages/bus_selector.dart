@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dubts/pages/profile.dart';
 import 'package:dubts/shared/loading.dart';
 import 'package:flutter/material.dart';
+import '../env.dart';
 import '../services/notificaton.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,8 +30,7 @@ class _BusSelectorState extends State<BusSelector> {
   }
 
   Future<void> fetchBusData() async {
-    var uri = Uri.parse(
-        "http://51.20.44.132:6069/dubts/bus-details/get-all-bus-data");
+    var uri = Uri.parse("http://$baseUri/bus-details/get-all-bus-data");
 
     try {
       dynamic response = await http.get(
@@ -197,7 +197,7 @@ class _BusSelectorState extends State<BusSelector> {
                               // print(allBusDetails[selectedBusName]);
                               allBusDetails[selectedBusName]
                                   ?.forEach((busDetails) {
-                                if(busDetails["time"] == selectedValue) {
+                                if (busDetails["time"] == selectedValue) {
                                   selectedBusCode = busDetails["code"]!;
                                   selectedBusTime = busDetails["time"]!;
                                 }

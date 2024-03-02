@@ -1,3 +1,4 @@
+import 'package:dubts/pages/Landing.dart';
 import 'package:dubts/pages/bus_details_adder.dart';
 import 'package:dubts/screens/wrapper.dart';
 import 'package:dubts/services/auth.dart';
@@ -12,7 +13,8 @@ import 'models/user.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await AuthService().deleteLocationData(inputData?['deviceID'], inputData?['busName'], inputData?['busCode']);
+    await AuthService().deleteLocationData(
+        inputData?['deviceID'], inputData?['busName'], inputData?['busCode']);
     return Future.value(true);
   });
 }
@@ -23,7 +25,8 @@ void main() async {
   NotificationManager.initialize();
   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-    systemNavigationBarColor: Colors.black, // Background color of the navigation bar
+    systemNavigationBarColor:
+        Colors.black, // Background color of the navigation bar
     systemNavigationBarIconBrightness: Brightness.light,
   ));
   runApp(const MyApp());
@@ -37,7 +40,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -51,11 +53,11 @@ class _MyAppState extends State<MyApp> {
       initialData: null,
       child: MaterialApp(
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
           useMaterial3: true,
         ),
-         home: Wrapper(),
-         // home: BusDetailsAdder(),
+        home: AnimationPage(),
+        // home: BusDetailsAdder(),
       ),
     );
   }
