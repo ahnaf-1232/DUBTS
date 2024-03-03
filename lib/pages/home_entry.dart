@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dubts/pages/Home.dart';
+import 'package:dubts/pages/home.dart';
 import 'package:dubts/pages/bus_selector.dart';
 import 'package:dubts/pages/schedule.dart';
 import '../services/auth.dart';

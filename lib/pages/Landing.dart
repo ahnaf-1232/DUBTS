@@ -61,7 +61,7 @@ class _AnimationPageState extends State<AnimationPage> {
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   fontFamily:
-                                      GoogleFonts.dancingScript().fontFamily,
+                                      GoogleFonts.lato().fontFamily,
                                 ),
                               ),
                               TextSpan(
@@ -73,7 +73,7 @@ class _AnimationPageState extends State<AnimationPage> {
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   fontFamily:
-                                      GoogleFonts.dancingScript().fontFamily,
+                                      GoogleFonts.lato().fontFamily,
                                 ),
                               ),
                             ],

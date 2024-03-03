@@ -1,5 +1,6 @@
-import 'package:dubts/pages/Landing.dart';
+import 'package:dubts/pages/landing.dart';
 import 'package:dubts/pages/bus_details_adder.dart';
+// import 'package:dubts/pages/splash.dart';
 import 'package:dubts/screens/wrapper.dart';
 import 'package:dubts/services/auth.dart';
 import 'package:dubts/services/notificaton.dart';

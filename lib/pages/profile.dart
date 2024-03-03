@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dubts/map.dart';
-import 'package:dubts/pages/Home.dart';
+import 'package:dubts/pages/home.dart';
 import 'package:dubts/pages/schedule.dart';
 import 'package:dubts/services/notificaton.dart';
 import 'package:dubts/shared/loading.dart';
