@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dubts/pages/profile.dart';
 import 'package:dubts/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -29,61 +30,55 @@ class _BusSelectorState extends State<BusSelector> {
   }
 
   Future<void> fetchBusData() async {
-    var uri = Uri.parse(
-        "http://51.21.35.242:6069/dubts/bus-details/get-all-bus-data");
-
     try {
-      dynamic response = await http.get(
-        uri,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-      );
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Get the bus_schedules collection
+      final docSnapshot = await firestore
+          .collection('bus_schedules')
+          .doc('X4zJH8RxPluvhhHZ8AyM')
+          .get();
+
+      final data = docSnapshot.data();
+
+      if (data == null) throw Exception('No data found');
 
       Map<String, List<Map<String, String>>> selectionData = {};
 
-      List busDetails = jsonDecode(response.body) as List;
+      data.forEach((busName, busDetails) {
+        selectionData[busName] = [];
 
-      busDetails.forEach((bus) {
-        selectionData[bus["name"]] = [];
-        List<dynamic> upTrip_buses = bus["upTripBuses"] as List<dynamic>;
+        final upTrip = (busDetails['upTrip_buses'] ?? []) as List<dynamic>;
+        final downTrip = (busDetails['downTrip_buses'] ?? []) as List<dynamic>;
 
-        for (var tripData in upTrip_buses) {
-          selectionData[bus["name"]]
-              ?.add({"time": tripData['time'], "code": tripData["busCode"]});
+        for (var trip in upTrip) {
+          selectionData[busName]?.add({
+            "time": trip['time'],
+            "code": trip['bus_code'],
+          });
         }
 
-        List<dynamic> downTrip_buses = bus['downTripBuses'] as List<dynamic>;
-
-        for (var tripData in downTrip_buses) {
-          selectionData[bus["name"]]
-              ?.add({"time": tripData['time'], "code": tripData["busCode"]});
+        for (var trip in downTrip) {
+          selectionData[busName]?.add({
+            "time": trip['time'],
+            "code": trip['bus_code'],
+          });
         }
       });
 
-      Map<String, dynamic> firstBus = busDetails[0];
-      String busName = firstBus["name"];
-      List<dynamic> upTripBuses = firstBus["upTripBuses"];
-      Map<String, dynamic> firstUpTrip =
-          upTripBuses.isNotEmpty ? upTripBuses[0] : {};
+      if (selectionData.isNotEmpty) {
+        final firstBusName = selectionData.keys.first;
+        final firstTrip = selectionData[firstBusName]!.first;
 
-      String firstBusCode = firstUpTrip["busCode"] ?? "";
-      String firstBusTime = firstUpTrip["time"] ?? "";
-
-      print("Bus Name: ${busName}");
-      print("First Bus Code: $firstBusCode");
-      print("First Bus Time: $firstBusTime");
-
-      if (mounted) {
         setState(() {
           allBusDetails = selectionData;
-          selectedBusName = busName;
-          selectedBusCode = firstBusCode;
-          selectedBusTime = firstBusTime;
+          selectedBusName = firstBusName;
+          selectedBusCode = firstTrip["code"] ?? "";
+          selectedBusTime = firstTrip["time"] ?? "";
         });
       }
     } catch (e) {
-      throw HttpException(e.toString());
+      print("Error fetching from Firestore: $e");
     }
   }
 
@@ -197,7 +192,7 @@ class _BusSelectorState extends State<BusSelector> {
                               // print(allBusDetails[selectedBusName]);
                               allBusDetails[selectedBusName]
                                   ?.forEach((busDetails) {
-                                if(busDetails["time"] == selectedValue) {
+                                if (busDetails["time"] == selectedValue) {
                                   selectedBusCode = busDetails["code"]!;
                                   selectedBusTime = busDetails["time"]!;
                                 }

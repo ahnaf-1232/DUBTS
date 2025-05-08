@@ -8,7 +8,7 @@ import 'package:dubts/shared/loading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'dart:ui' as ui;
 import '../services/auth.dart';
 
 class Profile extends StatefulWidget {
@@ -63,44 +63,45 @@ class _ProfileState extends State<Profile> {
   }
 
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
-    return <String, dynamic>{
-      'version.securityPatch': build.version.securityPatch,
-      'version.sdkInt': build.version.sdkInt,
-      'version.release': build.version.release,
-      'version.previewSdkInt': build.version.previewSdkInt,
-      'version.incremental': build.version.incremental,
-      'version.codename': build.version.codename,
-      'version.baseOS': build.version.baseOS,
-      'board': build.board,
-      'bootloader': build.bootloader,
-      'brand': build.brand,
-      'device': build.device,
-      'display': build.display,
-      'fingerprint': build.fingerprint,
-      'hardware': build.hardware,
-      'host': build.host,
-      'id': build.id,
-      'manufacturer': build.manufacturer,
-      'model': build.model,
-      'product': build.product,
-      'supported32BitAbis': build.supported32BitAbis,
-      'supported64BitAbis': build.supported64BitAbis,
-      'supportedAbis': build.supportedAbis,
-      'tags': build.tags,
-      'type': build.type,
-      'isPhysicalDevice': build.isPhysicalDevice,
-      'systemFeatures': build.systemFeatures,
-      'displaySizeInches':
-          ((build.displayMetrics.sizeInches * 10).roundToDouble() / 10),
-      'displayWidthPixels': build.displayMetrics.widthPx,
-      'displayWidthInches': build.displayMetrics.widthInches,
-      'displayHeightPixels': build.displayMetrics.heightPx,
-      'displayHeightInches': build.displayMetrics.heightInches,
-      'displayXDpi': build.displayMetrics.xDpi,
-      'displayYDpi': build.displayMetrics.yDpi,
-      'serialNumber': build.serialNumber,
-    };
-  }
+  final physicalSize = ui.window.physicalSize;
+  final pixelRatio = ui.window.devicePixelRatio;
+
+  final width = physicalSize.width / pixelRatio;
+  final height = physicalSize.height / pixelRatio;
+
+  return <String, dynamic>{
+    'version.securityPatch': build.version.securityPatch,
+    'version.sdkInt': build.version.sdkInt,
+    'version.release': build.version.release,
+    'version.previewSdkInt': build.version.previewSdkInt,
+    'version.incremental': build.version.incremental,
+    'version.codename': build.version.codename,
+    'version.baseOS': build.version.baseOS,
+    'board': build.board,
+    'bootloader': build.bootloader,
+    'brand': build.brand,
+    'device': build.device,
+    'display': build.display,
+    'fingerprint': build.fingerprint,
+    'hardware': build.hardware,
+    'host': build.host,
+    'id': build.id,
+    'manufacturer': build.manufacturer,
+    'model': build.model,
+    'product': build.product,
+    'supported32BitAbis': build.supported32BitAbis,
+    'supported64BitAbis': build.supported64BitAbis,
+    'supportedAbis': build.supportedAbis,
+    'tags': build.tags,
+    'type': build.type,
+    'isPhysicalDevice': build.isPhysicalDevice,
+    'systemFeatures': build.systemFeatures,
+    'screenWidthDp': width,
+    'screenHeightDp': height,
+    'pixelRatio': pixelRatio,
+    'serialNumber': build.serialNumber,
+  };
+}
 
   void _onItemTapped(int index, String selectedPageName) {
     setState(() {
@@ -199,10 +200,10 @@ class _ProfileState extends State<Profile> {
           index: _selectedIndex,
           children: <Widget>[
             Home(),
-            MapTracker(
+            MapTrackerWidget(
               busName: widget.busName,
               busCode: widget.busCode,
-              deviceID: _deviceData['id'],
+              deviceId: _deviceData['id'],
               busTime: widget.busTime,
             ),
           ],
