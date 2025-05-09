@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dubts/core/models/bus_location_model.dart';
 import 'package:dubts/core/services/background_location_service.dart';
 import 'package:dubts/core/services/database_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -42,23 +43,24 @@ class LocationService {
   }
 
   // Start tracking bus location (for bus drivers)
-  Future<bool> startTrackingBus(String busId) async {
+  Future<bool> startTrackingBus(String busId, BuildContext context) async {
+    print('Starting foreground tracking for bus: $busId');
     _currentBusId = busId;
     
     // Initialize and start background service
     await BackgroundLocationService.initForegroundTask();
-    final started = await BackgroundLocationService.startLocationService(busId);
+    final started = await BackgroundLocationService.startLocationService(busId, context);
     
     if (!started) {
       // If background service failed, fallback to foreground tracking
-      _startForegroundTracking(busId);
+      startForegroundTracking(busId);
     }
     
     return true;
   }
 
   // Start tracking in foreground (fallback)
-  void _startForegroundTracking(String busId) {
+  void startForegroundTracking(String busId) {
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 10,

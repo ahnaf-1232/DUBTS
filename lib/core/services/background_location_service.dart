@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:dubts/core/controllers/bus_tracker_controller.dart';
 import 'package:dubts/core/models/bus_location_model.dart';
+import 'package:dubts/core/services/location_service.dart';
+import 'package:dubts/core/services/permission_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,17 +22,26 @@ class LocationTaskHandler extends TaskHandler {
   SendPort? _sendPort;
   Timer? _timer;
   String? _busId;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore? _firestore;
+  BusTrackerController? bus_tracker_controller;
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter? sendPort) async {
     _sendPort = sendPort as SendPort?;
 
-    // Get the bus ID from shared preferences
+    // ✅ Initialize Firebase if needed
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+
+    bus_tracker_controller = BusTrackerController();
+
+    // ✅ Now it's safe to use Firestore
+    _firestore = FirebaseFirestore.instance;
+
     final prefs = await FlutterForegroundTask.getData<String>(key: 'busId');
     _busId = prefs;
 
-    // Start periodic location updates
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
       await _updateLocation();
     });
@@ -49,7 +63,8 @@ class LocationTaskHandler extends TaskHandler {
       // Update notification content
       await FlutterForegroundTask.updateService(
         notificationTitle: 'Bus Koi is tracking your location',
-        notificationText: 'Location: ${position.latitude}, ${position.longitude}',
+        notificationText:
+            'Location: ${position.latitude}, ${position.longitude}',
       );
 
       // Update location in Firestore if busId is available
@@ -72,20 +87,20 @@ class LocationTaskHandler extends TaskHandler {
       );
 
       // Find if there's an existing document for this bus
-      final existingDocs = await _firestore
+      final existingDocs = await _firestore!
           .collection('bus_locations')
           .where('busId', isEqualTo: busId)
           .get();
 
       if (existingDocs.docs.isNotEmpty) {
         // Update existing document
-        await _firestore
+        await _firestore!
             .collection('bus_locations')
             .doc(existingDocs.docs.first.id)
             .update(location.toMap());
       } else {
         // Create new document
-        await _firestore.collection('bus_locations').add(location.toMap());
+        await _firestore!.collection('bus_locations').add(location.toMap());
       }
     } catch (e) {
       print('Error updating bus location in Firestore: $e');
@@ -105,13 +120,13 @@ class LocationTaskHandler extends TaskHandler {
     // Update bus status to inactive if busId is available
     if (_busId != null) {
       try {
-        final existingDocs = await _firestore
+        final existingDocs = await _firestore!
             .collection('bus_locations')
             .where('busId', isEqualTo: _busId)
             .get();
 
         if (existingDocs.docs.isNotEmpty) {
-          await _firestore
+          await _firestore!
               .collection('bus_locations')
               .doc(existingDocs.docs.first.id)
               .update({'isActive': false});
@@ -137,7 +152,7 @@ class LocationTaskHandler extends TaskHandler {
     // Send notification pressed event to main isolate
     _sendPort?.send('onNotificationPressed');
   }
-  
+
   @override
   void onRepeatEvent(DateTime timestamp) {
     // TODO: implement onRepeatEvent
@@ -146,6 +161,7 @@ class LocationTaskHandler extends TaskHandler {
 
 class BackgroundLocationService {
   static ReceivePort? _receivePort;
+  static final LocationService _bus_location_service = LocationService();
 
   // Initialize foreground task
   static Future<void> initForegroundTask() async {
@@ -153,7 +169,8 @@ class BackgroundLocationService {
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'bus_koi_location_tracking',
         channelName: 'Location Tracking Service',
-        channelDescription: 'This notification appears when the app is tracking your location.',
+        channelDescription:
+            'This notification appears when the app is tracking your location.',
         channelImportance: NotificationChannelImportance.HIGH,
         priority: NotificationPriority.HIGH,
       ),
@@ -171,37 +188,40 @@ class BackgroundLocationService {
   }
 
   // Start location tracking service
-  static Future<bool> startLocationService(String busId) async {
-    // Store busId in shared preferences
+  static Future<bool> startLocationService(
+      String busId, BuildContext context) async {
+    _bus_location_service.startForegroundTracking(busId);
     await FlutterForegroundTask.saveData(key: 'busId', value: busId);
 
-    // Check if the service is already running
     final isRunning = await FlutterForegroundTask.isRunningService;
     if (isRunning) {
       return true;
     }
 
-    // Request permission
-    final allowed = await _requestPermission();
-    if (!allowed) {
+    final permissionsGranted =
+        await PermissionService.checkAndRequestAllPermissions(context);
+    if (!permissionsGranted) {
+      await PermissionService.showSamsungOverlayHelpDialog(context);
       return false;
     }
 
-    // Start foreground service
-    _receivePort = (await FlutterForegroundTask.startService(
+    // ✅ Start the service
+    await FlutterForegroundTask.startService(
       notificationTitle: 'Bus Koi is tracking your location',
       notificationText: 'Initializing location tracking...',
       callback: startCallback,
-    )) as ReceivePort?;
+    );
 
-    // Listen to events from the background isolate
+    // ✅ Get the port manually
+    _receivePort = FlutterForegroundTask.receivePort;
+
+    // ✅ Listen to background messages
     _receivePort?.listen((message) {
       if (message is Map<String, dynamic>) {
-        // Handle location update
-        print('Location update: ${message['latitude']}, ${message['longitude']}');
+        print(
+            'Location update: ${message['latitude']}, ${message['longitude']}');
       } else if (message is String) {
         if (message == 'onNotificationPressed') {
-          // Handle notification press - bring app to foreground
           FlutterForegroundTask.launchApp();
         }
       }
@@ -238,7 +258,8 @@ class BackgroundLocationService {
     if (await FlutterForegroundTask.canDrawOverlays) {
       return true;
     } else {
-      final permissionResult = await FlutterForegroundTask.openSystemAlertWindowSettings();
+      final permissionResult =
+          await FlutterForegroundTask.openSystemAlertWindowSettings();
       return permissionResult;
     }
   }

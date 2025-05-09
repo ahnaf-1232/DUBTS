@@ -1,15 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dubts/core/models/bus_location_model.dart';
 import 'package:dubts/core/models/bus_model.dart';
+import 'package:dubts/core/models/route_schedules.dart';
 import 'package:dubts/core/models/user_model.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseDatabase _realtimeDb = FirebaseDatabase.instance;
 
   // Collection references
   CollectionReference get usersCollection => _firestore.collection('users');
-  CollectionReference get busesCollection => _firestore.collection('buses');
+  CollectionReference get busesCollection => _firestore.collection('bus_schedules');
   CollectionReference get busLocationsCollection => _firestore.collection('bus_locations');
+
+  Future<FirebaseDatabase> get safeRealtimeDb async {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+    return FirebaseDatabase.instance;
+  }
 
   // Create or update user data
   Future<void> createUserData(UserModel user) async {
@@ -64,35 +75,21 @@ class DatabaseService {
 
   // Get bus location
   Stream<BusLocationModel?> getBusLocation(String busId) {
-    return busLocationsCollection
-        .where('busId', isEqualTo: busId)
-        .snapshots()
-        .map((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        return BusLocationModel.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+    return _realtimeDb.ref('bus_locations/$busId').onValue.map((event) {
+      final data = event.snapshot.value;
+      if (data != null && data is Map) {
+        final castedData = Map<String, dynamic>.from(data);
+        return BusLocationModel.fromMap(castedData);
       }
       return null;
     });
   }
 
   // Update bus location
-  Future<DocumentReference> updateBusLocation(BusLocationModel location) async {
-    // Find if there's an existing document for this bus
-    QuerySnapshot existingDocs = await busLocationsCollection
-        .where('busId', isEqualTo: location.busId)
-        .get();
-  
-    if (existingDocs.docs.isNotEmpty) {
-      // Update existing document
-      await busLocationsCollection.doc(existingDocs.docs.first.id).update(
-            location.toMap(),
-          );
-      return busLocationsCollection.doc(existingDocs.docs.first.id);
-    } else {
-      // Create new document
-      return busLocationsCollection.add(location.toMap());
-    }
+  Future<void> updateBusLocation(BusLocationModel location) async {
+    final db = await safeRealtimeDb;
+    print('Pushing to RTDB: ${location.toMap()}');
+    await db.ref('bus_locations/${location.busId}').set(location.toMap());
   }
 
   // Bus list from snapshot
@@ -104,4 +101,32 @@ class DatabaseService {
       );
     }).toList();
   }
+
+  Future<List<RouteSchedule>> fetchAllRouteSchedules() async {
+  final snapshot = await busesCollection.get();
+  final List<RouteSchedule> routeSchedules = [];
+
+  for (var doc in snapshot.docs) {
+    final data = doc.data() as Map<String, dynamic>;
+    for (var entry in data.entries) {
+      final routeName = entry.key;
+      final routeData = entry.value;
+      print("Route Name: $routeName");
+      print("Route Data: $routeData");
+
+      if (routeData != null) {
+        final downTrips = List<Map<String, dynamic>>.from(routeData['downTrip_buses'] ?? []);
+        final upTrips = List<Map<String, dynamic>>.from(routeData['upTrip_buses'] ?? []);
+        routeSchedules.add(RouteSchedule(
+          routeName: routeName,
+          downTripBuses: downTrips,
+          upTripBuses: upTrips,
+        ));
+      }
+    }
+  }
+
+  return routeSchedules;
+}
+
 }

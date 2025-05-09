@@ -4,6 +4,7 @@ import 'package:dubts/screens/home/bus_selector_screen.dart';
 import 'package:dubts/screens/home/map_overview_screen.dart';
 import 'package:dubts/screens/home/profile_screen.dart';
 import 'package:dubts/screens/home/schedule_screen.dart';
+import 'package:dubts/screens/home/user_location_tracking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -88,6 +89,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         physics: const NeverScrollableScrollPhysics(), // Disable swiping
         children: _screens,
       ),
+      floatingActionButton: _currentIndex != 3 ? FloatingActionButton(
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.my_location),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const UserLocationTrackingScreen(),
+            ),
+          );
+        },
+        tooltip: 'Track My Location',
+      ) : null,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,

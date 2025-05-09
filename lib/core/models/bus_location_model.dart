@@ -15,22 +15,26 @@ class BusLocationModel {
     required this.isActive,
   });
 
-  factory BusLocationModel.fromMap(Map<String, dynamic> data) {
+  factory BusLocationModel.fromMap(Map<String, dynamic> map) {
+    final loc = Map<String, dynamic>.from(map['location'] ?? {});
     return BusLocationModel(
-      busId: data['busId'] ?? '',
-      location: data['location'] ?? const GeoPoint(0, 0),
-      heading: (data['heading'] ?? 0.0).toDouble(),
-      timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      isActive: data['isActive'] ?? false,
+      busId: map['busId'] ?? '',
+      location: GeoPoint(loc['latitude'] ?? 0.0, loc['longitude'] ?? 0.0),
+      heading: map['heading']?.toDouble() ?? 0.0,
+      timestamp: DateTime.tryParse(map['timestamp'] ?? '') ?? DateTime.now(),
+      isActive: map['isActive'] ?? false,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'busId': busId,
-      'location': location,
+      'location': {
+        'latitude': location.latitude,
+        'longitude': location.longitude,
+      },
       'heading': heading,
-      'timestamp': Timestamp.fromDate(timestamp),
+      'timestamp': timestamp.toIso8601String(),
       'isActive': isActive,
     };
   }

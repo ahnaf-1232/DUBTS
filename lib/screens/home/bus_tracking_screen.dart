@@ -124,8 +124,9 @@ class _BusTrackingScreenState extends State<BusTrackingScreen> with WidgetsBindi
           ),
         );
       } else {
+        print('-----------------------------------------------------------------------------');
         // Start tracking
-        final success = await _busTrackerController.startTrackingBus(widget.bus.id);
+        final success = await _busTrackerController.startTrackingBus(widget.bus.id, context);
         
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(

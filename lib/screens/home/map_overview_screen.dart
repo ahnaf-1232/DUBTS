@@ -2,6 +2,7 @@ import 'package:dubts/core/controllers/bus_tracker_controller.dart';
 import 'package:dubts/core/models/bus_location_model.dart';
 import 'package:dubts/core/models/bus_model.dart';
 import 'package:dubts/screens/home/bus_details_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,24 +22,24 @@ class _MapOverviewScreenState extends State<MapOverviewScreen> {
   bool _isLoading = true;
   LatLng _currentPosition = const LatLng(23.8103, 90.4125); // Default to Dhaka
   Map<String, BusModel> _busesMap = {};
-  
+
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
     _loadBuses();
   }
-  
+
   Future<void> _getCurrentLocation() async {
     try {
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-      
+
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
       });
-      
+
       if (_mapController != null) {
         _mapController!.animateCamera(
           CameraUpdate.newLatLngZoom(_currentPosition, 14),
@@ -48,20 +49,20 @@ class _MapOverviewScreenState extends State<MapOverviewScreen> {
       print('Error getting current location: $e');
     }
   }
-  
+
   Future<void> _loadBuses() async {
     try {
       // Get all buses
       final busesStream = _busTrackerController.buses;
-      
+
       busesStream.listen((buses) {
         // Create a map of bus ID to bus model for easy lookup
         final busMap = {for (var bus in buses) bus.id: bus};
-        
+
         setState(() {
           _busesMap = busMap;
         });
-        
+
         // Load bus locations
         _loadBusLocations();
       });
@@ -72,51 +73,60 @@ class _MapOverviewScreenState extends State<MapOverviewScreen> {
       });
     }
   }
-  
+
   Future<void> _loadBusLocations() async {
     try {
       // Get all active bus locations
-      final locationsSnapshot = await FirebaseFirestore.instance
-          .collection('bus_locations')
-          .where('isActive', isEqualTo: true)
-          .get();
-      
+      final dbRef = FirebaseDatabase.instance.ref('bus_locations');
+      final snapshot = await dbRef.get();
+      print('----------------------------------------------------- -----------------');
+      print('snapshot: $snapshot');
+
       final Set<Marker> markers = {};
-      
-      for (final doc in locationsSnapshot.docs) {
-        final location = BusLocationModel.fromMap(doc.data());
-        final busId = location.busId;
-        
-        // Skip if we don't have the bus details
-        if (!_busesMap.containsKey(busId)) continue;
-        
-        final bus = _busesMap[busId]!;
-        
-        // Create marker
-        final marker = Marker(
-          markerId: MarkerId(busId),
-          position: LatLng(
-            location.location.latitude,
-            location.location.longitude,
-          ),
-          infoWindow: InfoWindow(
-            title: bus.name,
-            snippet: 'Route: ${bus.route}',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BusDetailsScreen(bus: bus),
-                ),
-              );
-            },
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        );
-        
-        markers.add(marker);
+
+      if (snapshot.exists && snapshot.value is Map) {
+        final data = Map<String, dynamic>.from(snapshot.value as Map);
+        print('data: $data');
+
+        data.forEach((key, value) {
+          final mapData = Map<String, dynamic>.from(value);
+          if (mapData['isActive'] == true) {
+            final location = BusLocationModel.fromMap(mapData);
+            final busId = location.busId;
+
+            print(_busesMap);
+
+            if (!_busesMap.containsKey(busId)) return;
+
+            final bus = _busesMap[busId]!;
+
+            final marker = Marker(
+              markerId: MarkerId(busId),
+              position: LatLng(
+                location.location.latitude,
+                location.location.longitude,
+              ),
+              infoWindow: InfoWindow(
+                title: bus.name,
+                snippet: 'Route: ${bus.route}',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BusDetailsScreen(bus: bus),
+                    ),
+                  );
+                },
+              ),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed),
+            );
+
+            markers.add(marker);
+          }
+        });
       }
-      
+
       setState(() {
         _markers = markers;
         _isLoading = false;
@@ -128,7 +138,7 @@ class _MapOverviewScreenState extends State<MapOverviewScreen> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +162,7 @@ class _MapOverviewScreenState extends State<MapOverviewScreen> {
             zoomControlsEnabled: false,
             compassEnabled: true,
           ),
-          
+
           // Loading indicator
           if (_isLoading)
             Container(
@@ -163,7 +173,7 @@ class _MapOverviewScreenState extends State<MapOverviewScreen> {
                 ),
               ),
             ),
-          
+
           // Info card
           Positioned(
             top: 16,
