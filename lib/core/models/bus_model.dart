@@ -2,61 +2,72 @@ class BusModel {
   final String id;
   final String name;
   final String route;
-  final String company;
-  final String type;
-  final double fare;
-  final String? imageUrl;
+  final List<BusSchedule> schedules;
+  final bool isNearby;
 
   BusModel({
     required this.id,
     required this.name,
     required this.route,
-    required this.company,
-    required this.type,
-    required this.fare,
-    this.imageUrl,
+    required this.schedules,
+    this.isNearby = false,
   });
 
-  factory BusModel.fromMap(Map<String, dynamic> data, String id) {
+  factory BusModel.fromJson(Map<String, dynamic> json) {
     return BusModel(
-      id: id,
-      name: data['name'] ?? '',
-      route: data['route'] ?? '',
-      company: data['company'] ?? '',
-      type: data['type'] ?? '',
-      fare: (data['fare'] ?? 0.0).toDouble(),
-      imageUrl: data['imageUrl'],
+      id: json['id'],
+      name: json['name'],
+      route: json['route'],
+      schedules: (json['schedules'] as List)
+          .map((schedule) => BusSchedule.fromJson(schedule))
+          .toList(),
+      isNearby: json['isNearby'] ?? false,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'route': route,
-      'company': company,
-      'type': type,
-      'fare': fare,
-      'imageUrl': imageUrl,
+      'schedules': schedules.map((schedule) => schedule.toJson()).toList(),
+      'isNearby': isNearby,
     };
   }
+}
 
-  BusModel copyWith({
-    String? id,
-    String? name,
-    String? route,
-    String? company,
-    String? type,
-    double? fare,
-    String? imageUrl,
-  }) {
-    return BusModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      route: route ?? this.route,
-      company: company ?? this.company,
-      type: type ?? this.type,
-      fare: fare ?? this.fare,
-      imageUrl: imageUrl ?? this.imageUrl,
+class BusSchedule {
+  final String id;
+  final String time;
+  final String from;
+  final String to;
+  final bool isCollegeGate;
+
+  BusSchedule({
+    required this.id,
+    required this.time,
+    required this.from,
+    required this.to,
+    this.isCollegeGate = false,
+  });
+
+  factory BusSchedule.fromJson(Map<String, dynamic> json) {
+    return BusSchedule(
+      id: json['id'],
+      time: json['time'],
+      from: json['from'],
+      to: json['to'],
+      isCollegeGate: json['isCollegeGate'] ?? false,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'time': time,
+      'from': from,
+      'to': to,
+      'isCollegeGate': isCollegeGate,
+    };
   }
 }

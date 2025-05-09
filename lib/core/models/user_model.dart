@@ -1,45 +1,57 @@
 class UserModel {
-  final String uid;
-  final String? email;
-  final String? displayName;
-  final String? photoURL;
+  final String id;
+  final String name;
+  final String email;
+  final String? photoUrl;
+  final bool isGuide;
+  final DateTime createdAt;
 
   UserModel({
-    required this.uid,
-    this.email,
-    this.displayName,
-    this.photoURL,
+    required this.id,
+    required this.name,
+    required this.email,
+    this.photoUrl,
+    this.isGuide = false,
+    required this.createdAt,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> data) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      uid: data['uid'] ?? '',
-      email: data['email'],
-      displayName: data['displayName'],
-      photoURL: data['photoURL'],
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      photoUrl: json['photoUrl'],
+      isGuide: json['isGuide'] ?? false,
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      'uid': uid,
+      'id': id,
+      'name': name,
       'email': email,
-      'displayName': displayName,
-      'photoURL': photoURL,
+      'photoUrl': photoUrl,
+      'isGuide': isGuide,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
   UserModel copyWith({
-    String? uid,
+    String? id,
+    String? name,
     String? email,
-    String? displayName,
-    String? photoURL,
+    String? photoUrl,
+    bool? isGuide,
+    DateTime? createdAt,
   }) {
     return UserModel(
-      uid: uid ?? this.uid,
+      id: id ?? this.id,
+      name: name ?? this.name,
       email: email ?? this.email,
-      displayName: displayName ?? this.displayName,
-      photoURL: photoURL ?? this.photoURL,
+      photoUrl: photoUrl ?? this.photoUrl,
+      isGuide: isGuide ?? this.isGuide,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
