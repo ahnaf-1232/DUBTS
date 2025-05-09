@@ -19,7 +19,7 @@ class AppRoutes {
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: AppRoutes.home,
+    initialLocation: AppRoutes.launch,
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
