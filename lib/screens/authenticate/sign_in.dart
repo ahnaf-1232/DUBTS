@@ -1,11 +1,11 @@
-import 'package:dubts/shared/loading.dart';
+import 'package:dubts/core/services/auth_service.dart';
+import 'package:dubts/shared/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
-
-  SignIn({required this.toggleView});
+  
+  const SignIn({Key? key, required this.toggleView}) : super(key: key);
 
   @override
   _SignInState createState() => _SignInState();
@@ -14,27 +14,30 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  bool loading=false;
-
+  bool loading = false;
+  
+  // Text field state
   String email = '';
   String password = '';
   String error = '';
 
   @override
   Widget build(BuildContext context) {
-    return loading? Loading():Scaffold(
-      backgroundColor: Colors.brown[100],
+    return loading ? const Loading() : Scaffold(
+      backgroundColor: Colors.red.shade50,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.red,
         elevation: 0.0,
-        title: const Text('Sign In'),
+        title: const Text('Sign In to Bus Koi'),
         actions: <Widget>[
           TextButton.icon(
-              icon: const Icon(Icons.person),
-              label: const Text('Register'),
-              onPressed: () {
-                widget.toggleView();
-              }),
+            icon: const Icon(Icons.person_add, color: Colors.white),
+            label: const Text(
+              'Register',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () => widget.toggleView(),
+          ),
         ],
       ),
       body: Container(
@@ -43,82 +46,82 @@ class _SignInState extends State<SignIn> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
+              Image.asset(
+                'assets/images/bus.png',
+                height: 120,
+              ),
+              const SizedBox(height: 20.0),
               TextFormField(
                 decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Enter your email',
+                  labelText: 'Email',
+                  prefixIcon: Icon(Icons.email),
                 ),
-                validator: (val) {
-                  val!.isEmpty ? 'Please enter an email' : null;
-                },
+                validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                 onChanged: (val) {
-                  setState(() {
-                    email = val;
-                  });
+                  setState(() => email = val);
                 },
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextFormField(
                 decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Enter password',
+                  labelText: 'Password',
+                  prefixIcon: Icon(Icons.lock),
                 ),
                 obscureText: true,
-                validator: (val) {
-                  val!.length < 6
-                      ? 'Password must be at least 6 digit long'
-                      : null;
-                },
+                validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                 onChanged: (val) {
-                  setState(() {
-                    password = val;
-                  });
+                  setState(() => password = val);
                 },
               ),
-              SizedBox(height: 20.0),
-              OutlinedButton(
-                // color: Colors.pink,
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                ),
+                child: const Text(
+                  'Sign In',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      loading=true;
-                    });
-                    dynamic result =
-                        await _auth.signInWithMail(email, password);
+                    setState(() => loading = true);
+                    dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                     if (result == null) {
                       setState(() {
-                        error = 'Could not sign in';
-                        loading=false;
+                        error = 'Could not sign in with those credentials';
+                        loading = false;
                       });
                     }
-
-                    print(email);
-                    print(password);
                   }
-                  Navigator.pushNamed(context, '/profile');
                 },
-                child: Text('Sign in'),
-              )
+              ),
+              const SizedBox(height: 12.0),
+              Text(
+                error,
+                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+              ),
+              const Spacer(),
+              TextButton(
+                child: const Text(
+                  'Continue as Guest',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () async {
+                  setState(() => loading = true);
+                  dynamic result = await _auth.signInAnonymously();
+                  if (result == null) {
+                    setState(() {
+                      error = 'Could not sign in anonymously';
+                      loading = false;
+                    });
+                  }
+                },
+              ),
             ],
           ),
         ),
-
-        // child: ElevatedButton(
-        //   child: Text('sign in anonymously'),
-        //   style: ElevatedButton.styleFrom(
-        //     primary: Colors.black, // Background color
-        //   ),
-        //   onPressed: () async {
-        //     dynamic result = await _auth.signInAnon();
-        //     if(result == null){
-        //       print('error signing in');
-        //     } else {
-        //       print('signed in');
-        //       print(result);
-        //     }
-        //   },
-        // ),
       ),
     );
   }

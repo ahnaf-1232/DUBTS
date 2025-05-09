@@ -1,52 +1,47 @@
-import 'package:dubts/pages/bus_details_adder.dart';
+import 'package:dubts/core/models/user_model.dart';
+import 'package:dubts/core/services/auth_service.dart';
+import 'package:dubts/core/services/background_location_service.dart';
+import 'package:dubts/core/theme/app_theme.dart';
 import 'package:dubts/screens/wrapper.dart';
-import 'package:dubts/services/auth.dart';
-import 'package:dubts/services/notificaton.dart';
+import 'package:dubts/shared/widgets/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
-import 'models/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  NotificationManager.initialize();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-    systemNavigationBarColor: Colors.black, // Background color of the navigation bar
-    systemNavigationBarIconBrightness: Brightness.light,
-  ));
+  
+  // Initialize foreground task
+  await BackgroundLocationService.initForegroundTask();
+  
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<CustomUser?>.value(
-      value: AuthService().user,
-      // initialData: null,
+    return StreamProvider<UserModel?>.value(
       initialData: null,
+      value: AuthService().user,
       child: MaterialApp(
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),
-          useMaterial3: true,
+        title: 'Bus Koi',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        home: FutureBuilder(
+          future: Future.delayed(const Duration(seconds: 3)),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LoadingScreen();
+            } else {
+              return const Wrapper();
+            }
+          },
         ),
-         home: Wrapper(),
-         // home: BusDetailsAdder(),
       ),
     );
   }

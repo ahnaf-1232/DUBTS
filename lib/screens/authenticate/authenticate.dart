@@ -3,33 +3,25 @@ import 'package:dubts/screens/authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
-  const Authenticate({super.key});
-
+  const Authenticate({Key? key}) : super(key: key);
 
   @override
-  State<Authenticate> createState() => _AuthenticateState();
+  _AuthenticateState createState() => _AuthenticateState();
 }
 
 class _AuthenticateState extends State<Authenticate> {
-
-  bool isSignIn= true;
-  void toggleViewFunc(){
-    setState(() {
-      // print(isSignIn.toString());
-      isSignIn= !isSignIn;
-      // print(isSignIn.toString());
-    });
+  bool showSignIn = true;
+  
+  void toggleView() {
+    setState(() => showSignIn = !showSignIn);
   }
+
   @override
   Widget build(BuildContext context) {
-
-   if(isSignIn){
-     return SignIn(toggleView: toggleViewFunc);
-   }
-   else{
-     return Register(toggleView: toggleViewFunc);
-   }
+    if (showSignIn) {
+      return SignIn(toggleView: toggleView);
+    } else {
+      return Register(toggleView: toggleView);
+    }
   }
 }
-
-
