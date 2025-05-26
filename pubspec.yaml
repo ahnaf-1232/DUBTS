@@ -16,6 +16,13 @@ dependencies:
   get_it: ^7.6.4
   shared_preferences: ^2.2.2
   intl: ^0.18.1
+  google_maps_flutter: ^2.12.2
+  google_maps_flutter_web: ^0.5.12
+  geolocator: ^14.0.1
+  firebase_core: ^2.27.1
+  cloud_firestore: ^4.15.9
+  firebase_database: ^10.4.10
+  firebase_core_platform_interface: ^5.4.0
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +33,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/bus_marker.svg
   # fonts:
   #   - family: SF Pro Display
   #     fonts:

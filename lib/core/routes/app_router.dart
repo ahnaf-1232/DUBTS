@@ -5,6 +5,7 @@ import 'package:dubts/features/auth/presentation/screens/verify_email_screen.dar
 import 'package:dubts/features/bus/presentation/screens/bus_details_screen.dart';
 import 'package:dubts/features/home/presentation/screens/home_screen.dart';
 import 'package:dubts/features/splash/presentation/screens/launch_screen.dart';
+import 'package:dubts/features/guide/presentation/screens/select_bus_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String verifyEmail = '/verify-email';
   static const String home = '/home';
   static const String busDetail = '/bus-detail';
+  static const String selectBus = '/select-bus';
 }
 
 class AppRouter {
@@ -52,6 +54,10 @@ class AppRouter {
           final busId = state.uri.queryParameters['id'];
           return BusDetailScreen(busId: busId);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.selectBus,
+        builder: (context, state) => const SelectBusScreen(),
       ),
     ],
   );

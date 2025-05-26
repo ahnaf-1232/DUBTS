@@ -3,13 +3,24 @@ import 'package:dubts/core/providers/auth_provider.dart';
 import 'package:dubts/core/providers/theme_provider.dart';
 import 'package:dubts/core/routes/app_router.dart';
 import 'package:dubts/core/theme/app_theme.dart';
+import 'package:dubts/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Failed to initialize Firebase: $e');
+  }
+
   // Set status bar color
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

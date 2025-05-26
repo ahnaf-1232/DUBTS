@@ -59,6 +59,19 @@ class LaunchScreen extends StatelessWidget {
                 type: ButtonType.outline,
                 size: ButtonSize.large,
               ),
+              SizedBox(height: screenHeight * 0.02),
+              AppButton(
+                text: 'Continue as Guest',
+                icon: Icons.person_outline,
+                onPressed: () {
+                  // TODO: Implement anonymous login logic
+                  context.go(AppRoutes.home);
+                },
+                type: ButtonType.outline,
+                size: ButtonSize.large,
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              const Spacer(),
             ],
           ),
         ),

@@ -2,7 +2,9 @@ import 'package:dubts/features/home/presentation/widgets/bus_search_bar.dart';
 import 'package:dubts/features/home/presentation/widgets/find_bus_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:dubts/core/utils/responsive_utils.dart';
-import 'package:dubts/features/home/presentation/widgets/map_view.dart'; // Import the MapView widget
+import 'package:dubts/features/home/presentation/widgets/map_view.dart';
+import 'package:go_router/go_router.dart';
+import 'package:dubts/core/routes/app_router.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
@@ -39,6 +41,25 @@ class GetStartedScreen extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           const Expanded(
             child: MapView(),
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => context.go(AppRoutes.selectBus),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFE53935),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Become a Guide',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
         ],
       ),

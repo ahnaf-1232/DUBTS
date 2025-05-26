@@ -55,7 +55,7 @@ class _BecomeGuideScreenState extends State<BecomeGuideScreen> {
 
     if (success) {
       if (mounted) {
-        context.go(AppRoutes.verifyEmail);
+        context.go(AppRoutes.selectBus);
       }
     } else {
       setState(() {
